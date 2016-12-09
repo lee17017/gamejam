@@ -10,7 +10,10 @@ public class Player : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        CmdConnection();
+        if (isLocalPlayer)
+        {
+            CmdConnection();
+        }
 	}
 	
 	// Update is called once per frame
@@ -21,7 +24,7 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdConnection()
     {
-        RpcCameraChange(numberOfPlayers);
+        RpcCameraChange(numberOfPlayers%2);
         numberOfPlayers++;
     }
 
