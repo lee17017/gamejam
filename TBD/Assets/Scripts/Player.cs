@@ -12,6 +12,7 @@ public class Player : NetworkBehaviour {
 	void Start () {
         if (isLocalPlayer)
         {
+            Debug.Log(5);
             CmdConnection();
         }
 	}
@@ -33,6 +34,7 @@ public class Player : NetworkBehaviour {
     {
         if (isLocalPlayer)
         {
+            Debug.Log(6);
             cams[i].enabled = true;
         }
     }
