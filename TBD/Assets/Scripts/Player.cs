@@ -4,38 +4,36 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class Player : NetworkBehaviour {
-
-    public Camera[] cams;
-    private int numberOfPlayers;
+    
+    public SpaceShip ship;
+    public int state = 0;
 
 	// Use this for initialization
 	void Start () {
         if (isLocalPlayer)
         {
-            Debug.Log(5);
-            CmdConnection();
+            ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
+            ship.player = this;
+            ship.Register();
         }
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+        ship.actions[state].Move();
 	}
 
-    [Command]
-    public void CmdConnection()
-    {
-        RpcCameraChange(numberOfPlayers%2);
-        numberOfPlayers++;
-    }
-
     [ClientRpc]
-    public void RpcCameraChange(int i)
+    public void RpcSetState(int n)
     {
         if (isLocalPlayer)
         {
-            Debug.Log(6);
-            cams[i].enabled = true;
+            state = n;
+            ship.cams[n].enabled=true;
         }
     }
 }
