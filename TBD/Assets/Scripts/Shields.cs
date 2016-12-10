@@ -12,14 +12,17 @@ public class Shields : Action {
             float deltaRot = player.ship.shieldRotSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
             CmdSetShieldRotation(player.ship.shieldRotation + deltaRot);
 
-            if (Input.GetKeyDown(KeyCode.Y))
+            if (Input.GetMouseButtonDown(1))
             {
                 CmdTurnOffShield();
             }
+
+            //Energy cost
+            player.useEnergy(1f * Time.deltaTime);
         }
         else
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) && player.energy > 5f)
             {
                 Vector3 mPos = Input.mousePosition;
                 float width = Screen.width;
@@ -28,6 +31,9 @@ public class Shields : Action {
                 {
                     CmdTurnOnShield(Mathf.Atan2(mPos.y - height / 2, mPos.x - width / 2) * -180 / Mathf.PI);
                 }
+
+                //Energy cost
+                player.useEnergy(5f);
             }
         }
     }

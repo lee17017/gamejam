@@ -11,17 +11,19 @@ public class Player : NetworkBehaviour {
     public GameObject bulletPref;
     public GameObject asteroidPrefab;
     private float timeTillNewAsteroid;
+    private float timeTillNextCycle;
 
     [SyncVar]
-    public int energy;
+    public float energy;
     [SyncVar]
     public int hitpoints;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
         ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
 
-        energy = 10;
+        energy = 20;
         hitpoints = 100;
         
         if (isLocalPlayer)
@@ -44,10 +46,13 @@ public class Player : NetworkBehaviour {
             CmdCycle();
         }
         actions[state].Move();
-
-        //Asteroiden Spawnen
+        
         if(isServer)
         {
+            //Energy Reg 2/s
+            gainEnergy(2f * Time.deltaTime);
+
+            //Asteroid Spawns
             if(timeTillNewAsteroid <= 0)
             {
                 Vector3 pos = Random.onUnitSphere;
@@ -58,13 +63,30 @@ public class Player : NetworkBehaviour {
             {
                 timeTillNewAsteroid -= Time.deltaTime;
             }
+
+            //CYCLE
+            if(timeTillNextCycle <= 0)
+            {
+
+            }
+            else
+            {
+                timeTillNextCycle -= Time.deltaTime;
+            }
         }
 	}
 
     void OnGUI()
     {
         GUI.Label(new Rect(Screen.width - 100, Screen.height - 50, 100, 25), "HP:\t" + hitpoints);
-        GUI.Label(new Rect(Screen.width - 100, Screen.height - 25, 100, 25), "Energy:\t" + energy);
+        GUI.Label(new Rect(Screen.width - 100, Screen.height - 25, 100, 25), "Energy:\t" + (int)energy);
+    }
+
+    public IEnumerator cycle()
+    {
+        //wARNING
+        yield return new WaitForSeconds(3f);
+        CmdCycle();
     }
 
     public void takeDamage(int damage)
@@ -76,7 +98,7 @@ public class Player : NetworkBehaviour {
         CmdSetHP(hitpoints - damage);
     }
 
-    public bool useEnergy(int energy)
+    public bool useEnergy(float energy)
     {
         if(this.energy < energy)
         {
@@ -89,7 +111,7 @@ public class Player : NetworkBehaviour {
         }
     }
 
-    public void releaseEnergy(int energy)
+    public void gainEnergy(float energy)
     {
         CmdSetEnergy(this.energy + energy);
     }
@@ -145,7 +167,7 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdFire()
     {
-        var bullet = (GameObject)Instantiate(bulletPref, ship.transform.position, ship.transform.rotation);
+        var bullet = (GameObject)Instantiate(bulletPref, ship.barrel.position, ship.barrel.rotation);
         NetworkServer.SpawnWithClientAuthority(bullet,gameObject);
         Destroy(bullet, 4.0f);
     }
@@ -164,9 +186,11 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdSetHP(int hp)
     {
-        GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Player>().RpcSetHP(hp);
-        GameObject.FindGameObjectsWithTag("Player")[1].GetComponent<Player>().RpcSetHP(hp);
-        GameObject.FindGameObjectsWithTag("Player")[2].GetComponent<Player>().RpcSetHP(hp);
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i].GetComponent<Player>().RpcSetHP(hp);
+        }
     }
 
     [ClientRpc]
@@ -176,15 +200,17 @@ public class Player : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdSetEnergy(int energy)
+    public void CmdSetEnergy(float energy)
     {
-        GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Player>().RpcSetEnergy(energy);
-        GameObject.FindGameObjectsWithTag("Player")[1].GetComponent<Player>().RpcSetEnergy(energy);
-        GameObject.FindGameObjectsWithTag("Player")[2].GetComponent<Player>().RpcSetEnergy(energy);
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for(int i = 0; i < players.Length; i++)
+        {
+            players[i].GetComponent<Player>().RpcSetEnergy(energy);
+        }
     }
 
     [ClientRpc]
-    public void RpcSetEnergy(int energy)
+    public void RpcSetEnergy(float energy)
     {
         this.energy = energy;
     }

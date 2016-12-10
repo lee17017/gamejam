@@ -21,9 +21,11 @@ public class Movement : Action
 
     public override void Move()
     {
+        float move = 0;
+        float rot = 0;
 		if (!altMoveBehaviour) {
-			float move = Input.GetAxis ("Vertical") * speed * Time.deltaTime;
-			float rot = Input.GetAxis ("Horizontal") * rotSpeed * Time.deltaTime;
+			move = Input.GetAxis ("Vertical") * speed * Time.deltaTime;
+			rot = Input.GetAxis ("Horizontal") * rotSpeed * Time.deltaTime;
 			//player.CmdShipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
 			player.shipMove (new Vector3 (0, 0, move), new Vector3 (0, rot, 0));
 			if (Vector3.Distance (posBefore, player.ship.transform.position) > 0.2f) {
@@ -44,7 +46,7 @@ public class Movement : Action
 			}
 			// No friction in space...
 			//      velocity = 0.8f * velocity;
-			float rot = Input.GetAxis("Horizontal") * rotSpeed * Time.deltaTime;
+			rot = Input.GetAxis("Horizontal") * rotSpeed * Time.deltaTime;
 			// Rotate velocity which gets added
 			Vector3 vec = Quaternion.AngleAxis (rot, Vector3.up) * new Vector3(0, 0, acceleration * Time.deltaTime);
 			velocity += vec;
@@ -76,6 +78,12 @@ public class Movement : Action
 				rotBefore = y;
 			}
 		}
+
+        //Energy cost
+        if(Mathf.Abs(move) + Mathf.Abs(rot) > 0)
+        {
+            player.useEnergy(1f * Time.deltaTime);
+        }
     }
 
     [Command]

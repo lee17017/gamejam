@@ -7,7 +7,7 @@ public class Bullet : NetworkBehaviour{
     public bool friendly = true;
 	// Use this for initialization
 	void Start () {
-        GetComponent<Rigidbody>().velocity = transform.forward * 20;
+        GetComponent<Rigidbody>().velocity = -transform.forward * 20;
 	}
 
     void OnTriggerEnter(Collider other)
