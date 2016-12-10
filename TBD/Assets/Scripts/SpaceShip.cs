@@ -21,6 +21,8 @@ public class SpaceShip : MonoBehaviour {
         shield.active = shieldActivated;
         if (timer > 0)
             timer -= Time.deltaTime;
+
+        gameObject.GetComponentInChildren<Collider>().enabled = shieldActivated;
     }
 
     public IEnumerator turnOnShield()
