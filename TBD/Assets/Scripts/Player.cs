@@ -114,6 +114,6 @@ public class Player : NetworkBehaviour {
         pos.y /= 35;
         var asteroid = (GameObject)Instantiate(asteroidPrefab, ship.transform.position + pos, ship.transform.rotation);
         NetworkServer.SpawnWithClientAuthority(asteroid, gameObject);
-        Destroy(asteroid, 20f);
+        Destroy(asteroid, 30f);
     }
 }
