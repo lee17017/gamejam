@@ -110,10 +110,10 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdSpawnAsteroid(Vector3 pos)
     {
-        pos *= 50;
+        pos *= 100;
         pos.y /= 5;
         var asteroid = (GameObject)Instantiate(asteroidPrefab, ship.transform.position + pos, ship.transform.rotation);
-    
+        NetworkServer.SpawnWithClientAuthority(asteroid, gameObject);
         Destroy(asteroid, 20f);
     }
 }
