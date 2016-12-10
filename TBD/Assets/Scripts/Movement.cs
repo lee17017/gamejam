@@ -8,7 +8,7 @@ public class Movement : Action
 
     private float speed = 10.0f;
     private float rotSpeed = 100.0f;
-
+    private Vector3 posBefore = Vector3.zero;
 
 
     public override void Move()
@@ -17,8 +17,12 @@ public class Movement : Action
         float rot = Input.GetAxis("Horizontal") * rotSpeed * Time.deltaTime;
         //player.CmdShipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
         player.shipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
+        if (Vector3.Distance(posBefore,player.ship.transform.position)>0.05f)
+        {
+            CmdSyncPosition(player.ship.transform.position);
+            posBefore = player.ship.transform.position;
+        }
         CmdRota(player.ship.transform.rotation.eulerAngles.y);
-        CmdSyncPosition(player.ship.transform.position);
     }
 
     [Command]
