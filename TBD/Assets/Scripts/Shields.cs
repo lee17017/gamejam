@@ -12,7 +12,7 @@ public class Shields : Action {
             float deltaRot = player.ship.shieldRotSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
             CmdSetShieldRotation(player.ship.shieldRotation + deltaRot);
 
-            if (Input.GetKeyDown(KeyCode.X))
+            if (Input.GetKeyDown(KeyCode.Y))
             {
                 CmdTurnOffShield();
             }
@@ -26,7 +26,7 @@ public class Shields : Action {
                 float height = Screen.height;
                 if(mPos.x > 0 && mPos.x < width && mPos.y > 0 && mPos.y < height)
                 {
-                    CmdTurnOnShield(Mathf.Atan2(mPos.y - height / 2, mPos.x - width / 2) * 180 / Mathf.PI);
+                    CmdTurnOnShield(Mathf.Atan2(mPos.y - height / 2, mPos.x - width / 2) * -180 / Mathf.PI);
                 }
             }
         }
@@ -41,7 +41,7 @@ public class Shields : Action {
     [ClientRpc]
     public void RpcSetShieldRotation(float degree)
     {
-        player.ship.shieldRotation = + degree;
+        player.ship.shieldRotation = degree;
     }
 
     [Command]

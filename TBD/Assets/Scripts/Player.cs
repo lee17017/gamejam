@@ -18,7 +18,7 @@ public class Player : NetworkBehaviour {
         if (isLocalPlayer)
         {
             ship.player = this;
-            state = GameObject.FindGameObjectsWithTag("Player").Length - 1;
+            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1 + 2) % 3;
             ship.cams[state].enabled = true;
         }
 	}
