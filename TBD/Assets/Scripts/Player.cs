@@ -20,6 +20,9 @@ public class Player : NetworkBehaviour {
 	// Use this for initialization
 	void Start () {
         ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
+
+        energy = 10;
+        hitpoints = 100;
         
         if (isLocalPlayer)
         {
@@ -57,6 +60,12 @@ public class Player : NetworkBehaviour {
             }
         }
 	}
+
+    void OnGUI()
+    {
+        GUI.Label(new Rect(Screen.width - 100, Screen.height - 50, 100, 25), "HP:\t" + hitpoints);
+        GUI.Label(new Rect(Screen.width - 100, Screen.height - 25, 100, 25), "Energy:\t" + energy);
+    }
 
     public void takeDamage(int damage)
     {
@@ -131,11 +140,6 @@ public class Player : NetworkBehaviour {
     {
         ship.transform.Translate(transl);
         ship.transform.Rotate(rotate);
-    }
-
-    public void takeDamage(int damage)
-    {
-
     }
 
     [Command]

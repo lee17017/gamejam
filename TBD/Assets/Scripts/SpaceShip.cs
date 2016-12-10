@@ -22,7 +22,7 @@ public class SpaceShip : MonoBehaviour {
         if (timer > 0)
             timer -= Time.deltaTime;
 
-        gameObject.GetComponentInChildren<Collider>().enabled = shieldActivated;
+        shield.GetComponent<Collider>().enabled = shieldActivated;
     }
 
     public IEnumerator turnOnShield()
