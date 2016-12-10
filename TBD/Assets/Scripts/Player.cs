@@ -11,6 +11,7 @@ public class Player : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        
         if (isLocalPlayer)
         {
             ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
@@ -58,5 +59,27 @@ public class Player : NetworkBehaviour {
         {
             ship.cams[i].enabled = i==state;
         }
+    }
+
+    /*[ClientRpc]
+    public void RpcShipMove(Vector3 position, Vector3 rotate)
+    {
+        ship.transform.position = position;
+        ship.transform.Rotate(rotate);
+    }
+
+    [Command]
+    public void CmdShipMove(Vector3 transl, Vector3 rotate)
+    {
+        ship.transform.position =  ship.transform.position + transl;
+        ship.transform.Rotate(rotate);
+
+        RpcShipMove(ship.transform.position, rotate);
+    }*/
+    public void shipMove(Vector3 transl, Vector3 rotate)
+    {
+        ship.transform.Translate(transl);
+        ship.transform.Rotate(rotate);
+
     }
 }
