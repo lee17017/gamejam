@@ -1,50 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-//Asteroidensteuerung
-public class Asteroids : NetworkBehaviour
-{
-    //Asteroiden
-    float speed = 10;
+public class GegnerSpShBeh : NetworkBehaviour {
 
-	void Start ()
-    {
+	// Use this for initialization
+    int speed;
+    int health;
+	void Start () {
         //Spawneinstellungen
         Transform spaceship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>().transform;
         transform.LookAt(spaceship);
 	}
 	
 	// Update is called once per frame
-	void Update ()
-    {
-        //Bewegung in gerader Richtung
+	void Update () {
+        //if(genug abstand)
         transform.position = transform.position + transform.forward * speed * Time.deltaTime;
+        //else{//fly in circles around the player and shoot!
 	}
-
-    //Zerstörung des Schiffs, falls Spieler "Server" ist
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.tag);
-        if(!isServer)
+        if (!isServer)
         {
             return;
         }
 
-        if(other.tag == "bullet")
+        if (other.tag == "bullet")
         {
             Destroy(gameObject);
         }
-        else if(other.tag == "shield")
+        else if (other.tag == "SpaceShip")
         {
-            Destroy(gameObject);
+
         }
-        else if(other.tag == "SpaceShip")
-        {
-            other.GetComponentInParent<SpaceShip>().player.takeDamage(5);
-            Destroy(gameObject);
-        }
-        
     }
 }
