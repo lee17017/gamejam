@@ -66,6 +66,9 @@ public class Shoot : Action {
         {
             player.ship.timer = player.ship.coolDown;
             player.CmdFire();
+
+            //Energy cost
+            player.useEnergy(1f);
         }
 
 
