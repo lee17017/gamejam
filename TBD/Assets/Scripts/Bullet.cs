@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        GetComponent<Rigidbody>().velocity = transform.forward * 20;
+        GetComponent<Rigidbody>().velocity = -transform.forward * 20;
 	}
 	
 	

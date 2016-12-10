@@ -14,7 +14,7 @@ public class SpaceShip : MonoBehaviour {
     public bool shieldActivated;
     public float shieldRotSpeed;
     public float shieldRotation;
-
+    public Transform base001, barrel;
     void Update()
     {
         shieldRota.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y + shieldRotation + 90, 0);
