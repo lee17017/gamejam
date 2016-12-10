@@ -22,9 +22,11 @@ public class Shields : Action {
             if (Input.GetMouseButtonDown(1))
             {
                 Vector3 mPos = Input.mousePosition;
-                if(mPos.x > 0 && mPos.x < Screen.width && mPos.y > 0 && mPos.y < Screen.height)
+                float width = Screen.width;
+                float height = Screen.height;
+                if(mPos.x > 0 && mPos.x < width && mPos.y > 0 && mPos.y < height)
                 {
-
+                    CmdTurnOnShield(Mathf.Atan2(mPos.y - height / 2, mPos.x - width / 2) * 180 / Mathf.PI);
                 }
             }
         }
