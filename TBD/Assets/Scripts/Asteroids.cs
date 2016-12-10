@@ -25,13 +25,16 @@ public class Asteroids : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Collision detected");
         if(!isLocalPlayer)
         {
+            Debug.Log("no local player");
             return;
         }
 
         if(other.tag == "bullet")
         {
+            Debug.Log("bullet");
             Destroy(gameObject);
         }
     }
