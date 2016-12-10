@@ -5,8 +5,15 @@ using UnityEngine.Networking;
 
 public class Movement : Action
 {
+	private bool altMoveBehaviour = false;
 
-    private float speed = 10.0f;
+	private float speed = 10f;
+
+	// only used for alternative move behaviour
+	private Vector3 velocity = new Vector3(0, 0, 0);
+	private float SPEED_CAP = 80f;
+	private float ACCELERATION = 15f;
+
     private float rotSpeed = 100.0f;
     private Vector3 posBefore = Vector3.zero;
     private float rotBefore = 0;
@@ -14,21 +21,61 @@ public class Movement : Action
 
     public override void Move()
     {
-        float move = Input.GetAxis("Vertical") * speed * Time.deltaTime;
-        float rot = Input.GetAxis("Horizontal") * rotSpeed * Time.deltaTime;
-        //player.CmdShipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
-        player.shipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
-        if (Vector3.Distance(posBefore,player.ship.transform.position)>0.2f)
-        {
-            CmdSyncPosition(player.ship.transform.position);
-            posBefore = player.ship.transform.position;
-        }
-        float y = player.ship.transform.rotation.eulerAngles.y;
-        if (Mathf.Abs(rotBefore-y)>0.5f)
-        {
-            CmdRota(y);
-            rotBefore = y;
-        }
+		if (!altMoveBehaviour) {
+			float move = Input.GetAxis ("Vertical") * speed * Time.deltaTime;
+			float rot = Input.GetAxis ("Horizontal") * rotSpeed * Time.deltaTime;
+			//player.CmdShipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
+			player.shipMove (new Vector3 (0, 0, move), new Vector3 (0, rot, 0));
+			if (Vector3.Distance (posBefore, player.ship.transform.position) > 0.2f) {
+				CmdSyncPosition (player.ship.transform.position);
+				posBefore = player.ship.transform.position;
+			}
+			float y = player.ship.transform.rotation.eulerAngles.y;
+			if (Mathf.Abs (rotBefore - y) > 0.5f) {
+				CmdRota (y);
+				rotBefore = y;
+			}
+		} else {
+			float acceleration = 0;
+			if (Input.GetKey (KeyCode.W)) {
+				acceleration = ACCELERATION;
+			} else if (Input.GetKey (KeyCode.S)) {
+				acceleration = -ACCELERATION;
+			}
+			// No friction in space...
+			//      velocity = 0.8f * velocity;
+			float rot = Input.GetAxis("Horizontal") * rotSpeed * Time.deltaTime;
+			// Rotate velocity which gets added
+			Vector3 vec = Quaternion.AngleAxis (rot, Vector3.up) * new Vector3(0, 0, acceleration * Time.deltaTime);
+			velocity += vec;
+			// Rotate total velocity because of the way shipMove works
+			velocity = Quaternion.AngleAxis (-rot, Vector3.up) * velocity;
+
+			// Cap velocity
+			var magnitude = velocity.magnitude;
+			if (magnitude > SPEED_CAP) {
+				velocity = velocity.normalized * SPEED_CAP;
+			}
+
+			// Brake
+			if (Input.GetKey (KeyCode.Q)) {
+				velocity *= 0.95f;
+			}
+
+			//player.CmdShipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
+			player.shipMove(velocity * Time.deltaTime, new Vector3(0, rot, 0));
+			if (Vector3.Distance(posBefore,player.ship.transform.position)>0.2f)
+			{
+				CmdSyncPosition(player.ship.transform.position);
+				posBefore = player.ship.transform.position;
+			}
+			float y = player.ship.transform.rotation.eulerAngles.y;
+			if (Mathf.Abs(rotBefore-y)>0.5f)
+			{
+				CmdRota(y);
+				rotBefore = y;
+			}
+		}
     }
 
     [Command]
