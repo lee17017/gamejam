@@ -22,7 +22,9 @@ public class Player : NetworkBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
+        Debug.Log(Time.deltaTime);
         if (!isLocalPlayer)
         {
             return;

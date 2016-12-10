@@ -12,7 +12,7 @@ public class Shields : Action {
             float deltaRot = player.ship.shieldRotSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
             CmdSetShieldRotation(player.ship.shieldRotation + deltaRot);
 
-            if (Input.GetButtonDown("Space"))
+            if (Input.GetButtonDown("X"))
             {
                 CmdTurnOffShield();
             }
@@ -22,7 +22,10 @@ public class Shields : Action {
             if (Input.GetMouseButtonDown(1))
             {
                 Vector3 mPos = Input.mousePosition;
-                
+                if(mPos.x > 0 && mPos.x < Screen.width && mPos.y > 0 && mPos.y < Screen.height)
+                {
+
+                }
             }
         }
     }
