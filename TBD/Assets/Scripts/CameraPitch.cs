@@ -8,7 +8,7 @@ public class CameraPitch : MonoBehaviour {
     float mouseSensitivity = 5f;
     float targetRotation = 0;
     float range = 60f;
-    float defaultpos = -90f;
+    float defaultpos = 110f;
 
 
     // Use this for initialization
@@ -28,6 +28,6 @@ public class CameraPitch : MonoBehaviour {
         //rotate
         //transform.Rotate(-pitch, 0, 0);
         transform.localRotation = Quaternion.Euler(
-            transform.rotation.x, targetRotation, -90f);
+            transform.rotation.x, targetRotation, 90f);
 	}
 }
