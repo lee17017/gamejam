@@ -14,7 +14,8 @@ public class Asteroids : NetworkBehaviour
     {
         Transform spaceship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>().transform;
         transform.LookAt(spaceship);
-        speed = Random.Range(minSpeed, maxSpeed);
+        //speed = Random.Range(minSpeed, maxSpeed);
+        speed = 10;
 	}
 	
 	// Update is called once per frame
