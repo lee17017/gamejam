@@ -38,7 +38,7 @@ public class Asteroids : NetworkBehaviour
         }
         else if(other.tag == "SpaceShip")
         {
-            Debug.Log("Ship hit");
+
         }
     }
 }

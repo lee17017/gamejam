@@ -11,6 +11,12 @@ public class Player : NetworkBehaviour {
     public GameObject bulletPref;
     public GameObject asteroidPrefab;
     private float timeTillNewAsteroid;
+
+    [SyncVar]
+    public int energy;
+    [SyncVar]
+    public int hitpoints;
+
 	// Use this for initialization
 	void Start () {
         ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
@@ -51,6 +57,33 @@ public class Player : NetworkBehaviour {
             }
         }
 	}
+
+    public void takeDamage(int damage)
+    {
+        if(!isServer)
+        {
+            return;
+        }
+        CmdSetHP(hitpoints - damage);
+    }
+
+    public bool useEnergy(int energy)
+    {
+        if(this.energy < energy)
+        {
+            return false;
+        }
+        else
+        {
+            CmdSetEnergy(this.energy - energy);
+            return true;
+        }
+    }
+
+    public void releaseEnergy(int energy)
+    {
+        CmdSetEnergy(this.energy + energy);
+    }
 
     [ClientRpc]
     public void RpcCycle()
@@ -99,6 +132,12 @@ public class Player : NetworkBehaviour {
         ship.transform.Translate(transl);
         ship.transform.Rotate(rotate);
     }
+
+    public void takeDamage(int damage)
+    {
+
+    }
+
     [Command]
     public void CmdFire()
     {
@@ -116,5 +155,33 @@ public class Player : NetworkBehaviour {
         var asteroid = (GameObject)Instantiate(asteroidPrefab, ship.transform.position + pos, ship.transform.rotation);
         NetworkServer.SpawnWithClientAuthority(asteroid, gameObject);
         Destroy(asteroid, 30f);
+    }
+
+    [Command]
+    public void CmdSetHP(int hp)
+    {
+        GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Player>().RpcSetHP(hp);
+        GameObject.FindGameObjectsWithTag("Player")[1].GetComponent<Player>().RpcSetHP(hp);
+        GameObject.FindGameObjectsWithTag("Player")[2].GetComponent<Player>().RpcSetHP(hp);
+    }
+
+    [ClientRpc]
+    public void RpcSetHP(int hp)
+    {
+        hitpoints = hp;
+    }
+
+    [Command]
+    public void CmdSetEnergy(int energy)
+    {
+        GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Player>().RpcSetEnergy(energy);
+        GameObject.FindGameObjectsWithTag("Player")[1].GetComponent<Player>().RpcSetEnergy(energy);
+        GameObject.FindGameObjectsWithTag("Player")[2].GetComponent<Player>().RpcSetEnergy(energy);
+    }
+
+    [ClientRpc]
+    public void RpcSetEnergy(int energy)
+    {
+        this.energy = energy;
     }
 }
