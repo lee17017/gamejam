@@ -17,7 +17,7 @@ public class SpaceShip : MonoBehaviour {
 
     void Update()
     {
-        shieldRota.rotation = Quaternion.Euler(0,90 - shieldRotation,0);        
+        shieldRota.rotation = Quaternion.Euler(0,transform.rotation.y + shieldRotation,0);        
         shield.active = shieldActivated;
         if (timer > 0)
             timer -= Time.deltaTime;

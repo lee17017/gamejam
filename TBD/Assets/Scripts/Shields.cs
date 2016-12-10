@@ -41,7 +41,7 @@ public class Shields : Action {
     [ClientRpc]
     public void RpcSetShieldRotation(float degree)
     {
-        player.ship.shieldRotation = degree;
+        player.ship.shieldRotation = + degree;
     }
 
     [Command]
