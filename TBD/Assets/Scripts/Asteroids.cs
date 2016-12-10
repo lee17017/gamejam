@@ -33,7 +33,11 @@ public class Asteroids : NetworkBehaviour
         if(other.tag == "bullet")
         {
             Debug.Log("destroy");
-            Destroy(gameObject);
+            //Destroy(gameObject);
+        }
+        else if(other.tag == "SpaceShip")
+        {
+            Debug.Log("Ship hit");
         }
     }
 }
