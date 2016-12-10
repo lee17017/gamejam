@@ -9,13 +9,13 @@ public class StarFlares : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 350; i++)
         {
             GameObject g = (GameObject)Instantiate(starFabs[Random.Range(0, 3)], Random.onUnitSphere * 1000, Quaternion.identity);
             g.GetComponent<LensFlare>().brightness = Random.Range(0.01f, 0.8f);
             g.GetComponent<LensFlare>().color = Random.ColorHSV();
         }
-        for (int i = 0; i < 2000; i++)
+        for (int i = 0; i < 150; i++)
         {
             GameObject g = (GameObject)Instantiate(starFabs[Random.Range(0, 3)], Random.onUnitSphere * 200, Quaternion.identity);
             g.GetComponent<LensFlare>().brightness = Random.Range(0.01f, 0.8f);
