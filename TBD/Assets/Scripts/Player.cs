@@ -167,7 +167,7 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdFire()
     {
-        var bullet = (GameObject)Instantiate(bulletPref, ship.barrel.position, ship.barrel.rotation);
+        var bullet = (GameObject)Instantiate(bulletPref, ship.cam.position, ship.cam.rotation);
         NetworkServer.SpawnWithClientAuthority(bullet,gameObject);
         Destroy(bullet, 4.0f);
     }
