@@ -17,6 +17,7 @@ public class Movement : Action
         float rot = Input.GetAxis("Horizontal") * rotSpeed * Time.deltaTime;
         //player.CmdShipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
         player.shipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
+       
     }
 
 }

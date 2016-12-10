@@ -7,6 +7,10 @@ public class Shoot : Action {
 
     public override void Move()
     {
-        base.Move();
+        if (Input.GetButton("Fire1") && player.ship.timer<=0)
+        {
+            player.ship.timer = player.ship.coolDown;
+            player.CmdFire();
+        }
     }
 }
