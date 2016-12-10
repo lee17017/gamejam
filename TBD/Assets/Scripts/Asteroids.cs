@@ -6,16 +6,12 @@ using UnityEngine.Networking;
 public class Asteroids : NetworkBehaviour
 {
 
-    private float speed;
-    public float minSpeed;
-    public float maxSpeed;
+    float speed = 10;
 	// Use this for initialization
 	void Start ()
     {
         Transform spaceship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>().transform;
         transform.LookAt(spaceship);
-        //speed = Random.Range(minSpeed, maxSpeed);
-        speed = 10;
 	}
 	
 	// Update is called once per frame
@@ -26,6 +22,7 @@ public class Asteroids : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.tag);
         if(!isServer)
         {
             return;
@@ -33,8 +30,7 @@ public class Asteroids : NetworkBehaviour
 
         if(other.tag == "bullet")
         {
-            Debug.Log("destroy");
-            //Destroy(gameObject);
+            Destroy(gameObject);
         }
         else if(other.tag == "SpaceShip")
         {
