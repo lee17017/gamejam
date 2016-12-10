@@ -12,7 +12,7 @@ public class Shields : Action {
             float deltaRot = player.ship.shieldRotSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
             CmdSetShieldRotation(player.ship.shieldRotation + deltaRot);
 
-            if (Input.GetButtonDown("Space"))
+            if (Input.GetKeyDown(KeyCode.X))
             {
                 CmdTurnOffShield();
             }
