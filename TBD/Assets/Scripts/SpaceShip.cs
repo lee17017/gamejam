@@ -8,7 +8,8 @@ public class SpaceShip : MonoBehaviour {
     public Camera[] cams;
     public Transform shieldRota;
     public GameObject shield;
-
+    public float coolDown = 2.0f;
+    public float timer=0;
     //Shield Control variables
     public bool shieldActivated;
     public float shieldRotSpeed;
@@ -18,6 +19,8 @@ public class SpaceShip : MonoBehaviour {
     {
         shieldRota.rotation = Quaternion.Euler(0,90 - shieldRotation,0);        
         shield.active = shieldActivated;
+        if (timer > 0)
+            timer -= Time.deltaTime;
     }
 
     public IEnumerator turnOnShield()
