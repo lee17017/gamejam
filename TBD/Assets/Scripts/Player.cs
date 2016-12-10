@@ -9,6 +9,8 @@ public class Player : NetworkBehaviour {
     public Action[] actions;
     public int state;
     public GameObject bulletPref;
+    public GameObject asteroidPrefab;
+    private float timeTillNewAsteroid;
 	// Use this for initialization
 	void Start () {
         ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
@@ -33,6 +35,21 @@ public class Player : NetworkBehaviour {
             CmdCycle();
         }
         actions[state].Move();
+
+        //Asteroiden Spawnen
+        if(isServer)
+        {
+            if(timeTillNewAsteroid <= 0)
+            {
+                Vector3 pos = Random.onUnitSphere;
+                CmdSpawnAsteroid(pos);
+                timeTillNewAsteroid = Random.Range(5, 10);
+            }
+            else
+            {
+                timeTillNewAsteroid -= Time.deltaTime;
+            }
+        }
 	}
 
     [ClientRpc]
@@ -88,5 +105,15 @@ public class Player : NetworkBehaviour {
         var bullet = (GameObject)Instantiate(bulletPref, ship.transform.position, ship.transform.rotation);
         NetworkServer.SpawnWithClientAuthority(bullet,gameObject);
         Destroy(bullet, 4.0f);
+    }
+
+    [Command]
+    public void CmdSpawnAsteroid(Vector3 pos)
+    {
+        pos *= 50;
+        pos.y /= 5;
+        var asteroid = (GameObject)Instantiate(asteroidPrefab, ship.transform.position + pos, ship.transform.rotation);
+        NetworkServer.SpawnWithClientAuthority(asteroid, gameObject);
+        Destroy(asteroid, 20f);
     }
 }
