@@ -29,6 +29,12 @@ public class Movement : Action
             CmdRota(y);
             rotBefore = y;
         }
+
+        //Energy cost
+        if(Mathf.Abs(move) + Mathf.Abs(rot) > 0)
+        {
+            player.useEnergy(1f * Time.deltaTime);
+        }
     }
 
     [Command]
