@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+//Asteroidensteuerung
 public class Asteroids : NetworkBehaviour
 {
 
@@ -12,6 +13,7 @@ public class Asteroids : NetworkBehaviour
 	// Use this for initialization
 	void Start ()
     {
+        //Spawneinstellungen
         Transform spaceship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>().transform;
         transform.LookAt(spaceship);
         speed = Random.Range(minSpeed, maxSpeed);
@@ -20,9 +22,11 @@ public class Asteroids : NetworkBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        //Bewegung in gerader Richtung
         transform.position = transform.position + transform.forward * speed * Time.deltaTime;
 	}
 
+    //Zerstörung des Schiffs, falls Spieler "Server" ist
     private void OnTriggerEnter(Collider other)
     {
         if(!isServer)
