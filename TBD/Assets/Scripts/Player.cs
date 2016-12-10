@@ -11,10 +11,10 @@ public class Player : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
         
         if (isLocalPlayer)
         {
-            ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
             ship.player = this;
             state = GameObject.FindGameObjectsWithTag("Player").Length - 1;
             ship.cams[state].enabled = true;
