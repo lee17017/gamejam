@@ -22,4 +22,17 @@ public class Asteroids : NetworkBehaviour
     {
         transform.position = transform.position + transform.forward * speed * Time.deltaTime;
 	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(!isLocalPlayer)
+        {
+            return;
+        }
+
+        if(other.tag == "bullet")
+        {
+            Destroy(gameObject);
+        }
+    }
 }
