@@ -9,6 +9,7 @@ public class Movement : Action
     private float speed = 10.0f;
     private float rotSpeed = 100.0f;
     private Vector3 posBefore = Vector3.zero;
+    private float rotBefore = 0;
 
 
     public override void Move()
@@ -17,12 +18,17 @@ public class Movement : Action
         float rot = Input.GetAxis("Horizontal") * rotSpeed * Time.deltaTime;
         //player.CmdShipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
         player.shipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
-        if (Vector3.Distance(posBefore,player.ship.transform.position)>0.05f)
+        if (Vector3.Distance(posBefore,player.ship.transform.position)>0.2f)
         {
             CmdSyncPosition(player.ship.transform.position);
             posBefore = player.ship.transform.position;
         }
-        CmdRota(player.ship.transform.rotation.eulerAngles.y);
+        float y = player.ship.transform.rotation.eulerAngles.y;
+        if (Mathf.Abs(rotBefore-y)>0.5f)
+        {
+            CmdRota(y);
+            rotBefore = y;
+        }
     }
 
     [Command]
@@ -35,6 +41,7 @@ public class Movement : Action
     [ClientRpc]
     public void RpcSyncPosition(Vector3 pos)
     {
+        if (isLocalPlayer) { return; }
         player.ship.transform.position = pos;
     }
 
@@ -48,6 +55,7 @@ public class Movement : Action
     [ClientRpc]
     public void RpcSyncRota(float rotY)
     {
+        if (isLocalPlayer) { return; }
         player.ship.transform.rotation = Quaternion.Euler(0, rotY, 0);
     }
 }
