@@ -36,9 +36,15 @@ public class Asteroids : NetworkBehaviour
         {
             Destroy(gameObject);
         }
+        else if(other.tag == "shield")
+        {
+            Destroy(gameObject);
+        }
         else if(other.tag == "SpaceShip")
         {
-            other.GetComponent<Player>().takeDamage(5);
+            other.GetComponentInParent<SpaceShip>().player.takeDamage(5);
+            Destroy(gameObject);
         }
+        
     }
 }
