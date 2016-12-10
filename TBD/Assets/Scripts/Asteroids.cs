@@ -26,7 +26,6 @@ public class Asteroids : NetworkBehaviour
     //Zerstörung des Schiffs, falls Spieler "Server" ist
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.tag);
         if(!isServer)
         {
             return;

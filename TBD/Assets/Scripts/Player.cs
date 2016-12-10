@@ -186,9 +186,11 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdSetHP(int hp)
     {
-        GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Player>().RpcSetHP(hp);
-        GameObject.FindGameObjectsWithTag("Player")[1].GetComponent<Player>().RpcSetHP(hp);
-        GameObject.FindGameObjectsWithTag("Player")[2].GetComponent<Player>().RpcSetHP(hp);
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i].GetComponent<Player>().RpcSetHP(hp);
+        }
     }
 
     [ClientRpc]
@@ -200,9 +202,11 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdSetEnergy(float energy)
     {
-        GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Player>().RpcSetEnergy(energy);
-        GameObject.FindGameObjectsWithTag("Player")[1].GetComponent<Player>().RpcSetEnergy(energy);
-        GameObject.FindGameObjectsWithTag("Player")[2].GetComponent<Player>().RpcSetEnergy(energy);
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for(int i = 0; i < players.Length; i++)
+        {
+            players[i].GetComponent<Player>().RpcSetEnergy(energy);
+        }
     }
 
     [ClientRpc]
