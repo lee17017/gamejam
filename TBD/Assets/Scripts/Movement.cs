@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Networking;
 
 public class Movement : Action
 {
 
     private float speed = 10.0f;
     private float rotSpeed = 100.0f;
-
+    private Vector3 posBefore = Vector3.zero;
+    private float rotBefore = 0;
 
 
     public override void Move()
@@ -17,7 +18,44 @@ public class Movement : Action
         float rot = Input.GetAxis("Horizontal") * rotSpeed * Time.deltaTime;
         //player.CmdShipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
         player.shipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
-       
+        if (Vector3.Distance(posBefore,player.ship.transform.position)>0.2f)
+        {
+            CmdSyncPosition(player.ship.transform.position);
+            posBefore = player.ship.transform.position;
+        }
+        float y = player.ship.transform.rotation.eulerAngles.y;
+        if (Mathf.Abs(rotBefore-y)>0.5f)
+        {
+            CmdRota(y);
+            rotBefore = y;
+        }
     }
 
+    [Command]
+    public void CmdSyncPosition(Vector3 pos)
+    {
+        player.ship.transform.position = pos;
+        RpcSyncPosition(pos);
+    }
+
+    [ClientRpc]
+    public void RpcSyncPosition(Vector3 pos)
+    {
+        if (isLocalPlayer) { return; }
+        player.ship.transform.position = pos;
+    }
+
+    [Command]
+    public void CmdRota(float rotY)
+    {
+        player.ship.transform.rotation = Quaternion.Euler(0,rotY,0);
+        RpcSyncRota(rotY);
+    }
+
+    [ClientRpc]
+    public void RpcSyncRota(float rotY)
+    {
+        if (isLocalPlayer) { return; }
+        player.ship.transform.rotation = Quaternion.Euler(0, rotY, 0);
+    }
 }

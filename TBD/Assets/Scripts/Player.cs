@@ -18,7 +18,7 @@ public class Player : NetworkBehaviour {
         if (isLocalPlayer)
         {
             ship.player = this;
-            state = GameObject.FindGameObjectsWithTag("Player").Length - 1;
+            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1 + 2) % 3;
             ship.cams[state].enabled = true;
         }
 	}
@@ -110,10 +110,10 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdSpawnAsteroid(Vector3 pos)
     {
-        pos *= 50;
-        pos.y /= 5;
+        pos *= 100;
+        pos.y /= 35;
         var asteroid = (GameObject)Instantiate(asteroidPrefab, ship.transform.position + pos, ship.transform.rotation);
-    
-        Destroy(asteroid, 20f);
+        NetworkServer.SpawnWithClientAuthority(asteroid, gameObject);
+        Destroy(asteroid, 30f);
     }
 }
