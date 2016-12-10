@@ -34,7 +34,7 @@ public class Asteroids : NetworkBehaviour
         }
         else if(other.tag == "SpaceShip")
         {
-
+            other.GetComponent<Player>().takeDamage(5);
         }
     }
 }
