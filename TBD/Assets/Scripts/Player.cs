@@ -8,7 +8,7 @@ public class Player : NetworkBehaviour {
     public SpaceShip ship;
     public Action[] actions;
     public int state;
-
+    public GameObject bulletPref;
 	// Use this for initialization
 	void Start () {
         ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
@@ -81,6 +81,12 @@ public class Player : NetworkBehaviour {
     {
         ship.transform.Translate(transl);
         ship.transform.Rotate(rotate);
-
+    }
+    [Command]
+    public void CmdFire()
+    {
+        var bullet = (GameObject)Instantiate(bulletPref, ship.transform.position, ship.transform.rotation);
+        NetworkServer.SpawnWithClientAuthority(bullet,gameObject);
+        Destroy(bullet, 4.0f);
     }
 }
