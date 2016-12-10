@@ -15,7 +15,7 @@ public class Asteroids : NetworkBehaviour
 	
 	// Update is called once per frame
 	void Update ()
-    { 
-		
+    {
+        transform.position = transform.position + Vector3.forward * Time.deltaTime;
 	}
 }
