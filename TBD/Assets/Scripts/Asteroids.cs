@@ -25,10 +25,8 @@ public class Asteroids : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collision detected " + other.tag);
         if(!isServer)
         {
-            Debug.Log("no server");
             return;
         }
 
