@@ -7,17 +7,23 @@ public class Shields : Action {
 
     public override void Move()
     {
-        float deltaRot = player.ship.shieldRotSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
-        CmdSetShieldRotation(player.ship.shielRotation + deltaRot);
-
-        if(Input.GetButtonDown("Space") && player.ship.shieldActivated)
+        if(player.ship.shieldActivated)
         {
-            CmdTurnOffShield();            
+            float deltaRot = player.ship.shieldRotSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
+            CmdSetShieldRotation(player.ship.shieldRotation + deltaRot);
+
+            if (Input.GetButtonDown("Space"))
+            {
+                CmdTurnOffShield();
+            }
         }
-        if(Input.GetMouseButtonDown(1) && !player.ship.shieldActivated)
+        else
         {
-            Vector3 mPos = Input.mousePosition;
-
+            if (Input.GetMouseButtonDown(1))
+            {
+                Vector3 mPos = Input.mousePosition;
+                
+            }
         }
     }
 
@@ -30,7 +36,7 @@ public class Shields : Action {
     [ClientRpc]
     public void RpcSetShieldRotation(float degree)
     {
-        player.ship.setShieldRotation(degree);
+        player.ship.shieldRotation = degree;
     }
 
     [Command]
@@ -54,7 +60,7 @@ public class Shields : Action {
     [ClientRpc]
     public void RpcTurnOnShield(float degree)
     {
-        player.ship.shieldActivated.turnOnShield();
-        player.ship.setShieldRotation(degree);
+        StartCoroutine(player.ship.turnOnShield());
+        player.ship.shieldRotation = degree;
     }
 }

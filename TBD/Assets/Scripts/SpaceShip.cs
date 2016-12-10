@@ -10,4 +10,16 @@ public class SpaceShip : MonoBehaviour {
     public Action[] actions;
     public Camera[] cams;
 
+    //Shield Control variables
+    public bool shieldActivated;
+    public float shieldRotSpeed;
+    public float shieldRotation;
+
+
+
+    public IEnumerator turnOnShield()
+    {
+        yield return new WaitForSeconds(1f);
+        shieldActivated = true;
+    }
 }
