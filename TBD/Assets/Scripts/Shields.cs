@@ -5,6 +5,8 @@ using UnityEngine.Networking;
 
 public class Shields : Action {
 
+    private float viewRotation;
+
     public override void Move()
     {
         if(Input.GetAxis("Mouse X") != 0)
