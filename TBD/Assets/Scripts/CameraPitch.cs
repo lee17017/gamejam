@@ -26,7 +26,7 @@ public class CameraPitch : MonoBehaviour {
 
 
         //rotate
-        //transform.Rotate(-pitch, 0, 0);
+        transform.Rotate(-pitch, 0, 0);
         ship.GetComponent<SpaceShip>().player.CmdCamUpdate(Quaternion.Euler(
             transform.rotation.x, targetRotation, 90f)); 
     }
