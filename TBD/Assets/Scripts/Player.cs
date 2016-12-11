@@ -137,7 +137,7 @@ public class Player : NetworkBehaviour {
             //CYCLE
             if(timeTillNextCycle <= 0)
             {
-                timeTillNextCycle = Random.Range(5, 10);
+                timeTillNextCycle = Random.Range(30, 60);
                 StartCoroutine(cycle());
             }
             else
