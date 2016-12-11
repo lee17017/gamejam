@@ -13,6 +13,7 @@ public class Player : NetworkBehaviour {
     public int state;
     public GameObject bulletPref;
     public GameObject asteroidPrefab;
+    public GameObject asteroidPrefab2;
     private float timeTillNewAsteroid;
     [SerializeField]
     private float timeTillNextCycle;
@@ -282,7 +283,17 @@ public class Player : NetworkBehaviour {
         pos *= 100;
         pos.y /= 35;
         pos.y = 0;
-        var asteroid = (GameObject)Instantiate(asteroidPrefab, ship.transform.position + pos, ship.transform.rotation);
+        //Randomwert
+        float tmp =Random.Range(1, 6);
+        GameObject asteroid;
+        if (tmp < 4)
+        {
+            asteroid = (GameObject)Instantiate(asteroidPrefab, ship.transform.position + pos, ship.transform.rotation);
+        }
+        else
+        {
+            asteroid = (GameObject)Instantiate(asteroidPrefab2, ship.transform.position + pos, ship.transform.rotation);
+        }
         NetworkServer.SpawnWithClientAuthority(asteroid, gameObject);
         Destroy(asteroid, 30f);
     }
