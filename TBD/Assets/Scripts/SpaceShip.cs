@@ -15,13 +15,15 @@ public class SpaceShip : MonoBehaviour {
     public float shieldRotSpeed;
     public float shieldRotation;
     public Transform base001, barrel, cam;
+
     void Update()
     {
-        shieldRota.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y + shieldRotation + 90, 0);
+        shieldRota.rotation = Quaternion.Euler(0, shieldRotation + 90, 0);
         shield.active = shieldActivated;
         if (timer > 0)
             timer -= Time.deltaTime;
 
         shield.GetComponent<Collider>().enabled = shieldActivated;
     }
+   
 }

@@ -7,6 +7,9 @@ public class Player : NetworkBehaviour {
     
     public SpaceShip ship;
     public Action[] actions;
+    public AudioSource alarm;
+
+    [SyncVar]
     public int state;
     public GameObject bulletPref;
     public GameObject asteroidPrefab;
@@ -23,11 +26,18 @@ public class Player : NetworkBehaviour {
     public bool energyDown;
 
     [SyncVar]
+    public int count;
+    [SyncVar]
     public float energyDiff;
 
-	// Use this for initialization
+    [SyncVar]
+    public bool ready;
+
+    private bool paused;
+	//00 Use this for initialization
 	void Start ()
     {
+        paused = true;
         ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
 
         timeTillNextCycle = Random.Range(30,60);
@@ -35,17 +45,39 @@ public class Player : NetworkBehaviour {
 
         energy = 20;
         hitpoints = 100;
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        if(players.Length > 0)
+            count = players[0].GetComponent<Player>().count;
         
+
         if (isLocalPlayer)
         {
+
             ship.player = this;
-            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1 + 2) % 3;
-            ship.cams[state].enabled = true;
+            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1)%3;
+            CmdState(state);
+            GameObject.Find("Button").GetComponent<Transform>().transform.position = GameObject.Find("Button").GetComponent<Transform>().transform.position + new Vector3(0, -30 * state, 0);
+            Debug.Log(state);
         }
 	}
 
+    public void realStart()
+    {
+        
+        ship.cams[3].enabled = false;
+        if (isLocalPlayer)
+        {
+            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;//Achtung
+            ship.cams[state].enabled = true;
+            Destroy(GameObject.Find("CanvasMen"));
+        }
+        
+    }
     void LateUpdate()
     {
+        if (paused)
+            return;
         if (!isServer)
             return;
         
@@ -63,6 +95,18 @@ public class Player : NetworkBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        if (paused)
+        {
+            if (count == 3)
+            {
+                paused = false;
+                realStart();
+            }
+            else
+            {
+                return;
+            }
+        }
         energyDiff = 0;
         if(energy <= 0)
         {
@@ -98,7 +142,7 @@ public class Player : NetworkBehaviour {
             if(timeTillNextCycle <= 0)
             {
                 timeTillNextCycle = Random.Range(30, 60);
-                StartCoroutine(cycle());
+                CmdCycle();
             }
             else
             {
@@ -125,10 +169,17 @@ public class Player : NetworkBehaviour {
 
     public IEnumerator cycle()
     {
-        cycleWarning = true;
-        yield return new WaitForSeconds(1.5f);
-        cycleWarning = false;
-        CmdCycle();
+        if (isLocalPlayer)
+        {
+            alarm.Play();
+            cycleWarning = true;
+            yield return new WaitForSeconds(2.5f);
+            cycleWarning = false;
+            state++;
+            state = state % 3;
+            CmdState(state);
+            CycleCams();
+        }
     }
 
     public IEnumerator energyDowntime()
@@ -160,14 +211,19 @@ public class Player : NetworkBehaviour {
     [ClientRpc]
     public void RpcCycle()
     {
-        if (isLocalPlayer)
-        {
-            state++;
-            state = state % 3;
-            CycleCams();
-        }
+        StartCoroutine(cycle());
     }
 
+    [Command]
+    public void CmdState(int state)
+    {
+        RpcState(state);
+    }
+    [ClientRpc]
+    public void RpcState(int state)
+    {
+        this.state = state;
+    }
     [Command]
     public void CmdCycle()
     {
@@ -256,5 +312,26 @@ public class Player : NetworkBehaviour {
     public void RpcSetEnergy(float energy)
     {
         this.energy = energy;
+    }
+
+    [Command]
+    public void CmdUpdateCount(int count)
+    {
+        if (count > 0)
+            ready = true;
+        else
+            ready = false;
+        count = this.count + count;  
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i].GetComponent<Player>().RpcUpdateCount(count);
+        }
+    }
+
+    [ClientRpc]
+    public void RpcUpdateCount(int count)
+    {
+        this.count = count;
     }
 }
