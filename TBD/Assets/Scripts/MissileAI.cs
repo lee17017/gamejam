@@ -9,8 +9,8 @@ public class MissileAI : MonoBehaviour {
     public GameObject target;
     public float damage;
     public float health = 10;
-    public ParticleSystem Explosion;
-    public ParticleSystem Explosion2;
+    public GameObject Explosion;
+    public GameObject Explosion2;
     // Use this for initialization
     void Start () {
 
@@ -43,11 +43,11 @@ public class MissileAI : MonoBehaviour {
             float tmp = Random.Range(1, 6);
             if (tmp < 4)
             {
-                Instantiate(Explosion, gameObject.transform);
+                Instantiate(Explosion, transform.position, Quaternion.identity);
             }
             else
             {
-                Instantiate(Explosion2, gameObject.transform);
+                Instantiate(Explosion2, transform.position, Quaternion.identity);
             }
             DestroyObject(this.gameObject); 
         }
