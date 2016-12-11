@@ -237,7 +237,14 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void RpcCycle()
     {
-        StartCoroutine(cycle());
+
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < players.Length; i++)
+        {
+            GameObject a = GameObject.Find("Crosshair(Clone)");
+            Destroy(a);
+        }
+            StartCoroutine(cycle());
     }
 
     [Command]
@@ -256,8 +263,6 @@ public class Player : NetworkBehaviour
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
         {
-            GameObject a = GameObject.Find("Crosshair(Clone)");
-            Destroy(a);
 
             players[i].GetComponent<Player>().RpcCycle();
         }
