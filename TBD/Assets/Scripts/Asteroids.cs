@@ -7,8 +7,8 @@ using UnityEngine.Networking;
 public class Asteroids : NetworkBehaviour
 {
     float speed = 10;
-    public ParticleSystem Explosion;
-    public ParticleSystem Explosion2;
+    public GameObject Explosion;
+    public GameObject Explosion2;
 
 	void Start ()
     {
@@ -25,26 +25,41 @@ public class Asteroids : NetworkBehaviour
 	}
 
     //Zerstörung des Schiffs, falls Spieler "Server" ist
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
-        if(!isServer)
+
+        if (other.tag == "bullet")
+        {
+            Instantiate(Explosion2, transform.position, Quaternion.identity);
+        }
+        else if (other.tag == "shield")
+        {
+            Instantiate(Explosion2, transform.position, Quaternion.identity);
+        }
+        else if (other.tag == "SpaceShip")
+        {
+            Instantiate(Explosion, transform.position, Quaternion.identity);
+
+        }
+        if (!isServer)
         {
             return;
         }
 
         if(other.tag == "bullet")
         {
+            Instantiate(Explosion2, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
         else if(other.tag == "shield")
         {
-            Instantiate(Explosion2, gameObject.transform);
+            Instantiate(Explosion2, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
         else if(other.tag == "SpaceShip")
         {
             other.GetComponentInParent<SpaceShip>().player.takeDamage(5);
-            Instantiate(Explosion, gameObject.transform);
+            Instantiate(Explosion, transform.position, Quaternion.identity);
             Destroy(gameObject);
 
         }
