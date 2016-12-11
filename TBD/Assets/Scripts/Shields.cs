@@ -5,8 +5,16 @@ using UnityEngine.Networking;
 
 public class Shields : Action {
 
+    private float viewRotation;
+
     public override void Move()
     {
+        if(Input.GetAxis("Mouse X") != 0)
+        {
+            float deltaRot = player.ship.shieldRotSpeed * Input.GetAxis("Mouse X") * Time.deltaTime;
+        }
+
+
         if(player.ship.shieldActivated)
         {
             float deltaRot = player.ship.shieldRotSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;

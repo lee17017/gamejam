@@ -27,7 +27,7 @@ public class Player : NetworkBehaviour {
     {
         ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
 
-        timeTillNextCycle = Random.Range(10, 10);
+        timeTillNextCycle = Random.Range(30,60);
         timeTillNewAsteroid = Random.Range(5, 10);
 
         energy = 20;
