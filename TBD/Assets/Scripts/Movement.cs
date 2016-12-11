@@ -21,9 +21,24 @@ public class Movement : Action
 
     public override void Move()
     {
+        if (player.energyDown)
+            return;
         float move = 0;
         float rot = 0;
 		if (!altMoveBehaviour) {
+			if (Input.GetAxis ("Vertical") != 0) {
+				var pss = player.ship.GetComponentsInChildren<ParticleSystem> ();
+				foreach (ParticleSystem ps in pss) {
+					var emission = ps.emission;
+					emission.enabled = true;
+				}
+			} else {
+				var pss = player.ship.GetComponentsInChildren<ParticleSystem> ();
+				foreach (ParticleSystem ps in pss) {
+					var emission = ps.emission;
+					emission.enabled = false;
+				}
+			}
 			move = Input.GetAxis ("Vertical") * speed * Time.deltaTime;
 			rot = Input.GetAxis ("Horizontal") * rotSpeed * Time.deltaTime;
 			//player.CmdShipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
@@ -41,8 +56,26 @@ public class Movement : Action
 			float acceleration = 0;
 			if (Input.GetKey (KeyCode.W)) {
 				acceleration = ACCELERATION;
+
+				var pss = player.ship.GetComponentsInChildren<ParticleSystem> ();
+				foreach (ParticleSystem ps in pss) {
+					var emission = ps.emission;
+					emission.enabled = true;
+				}
 			} else if (Input.GetKey (KeyCode.S)) {
 				acceleration = -ACCELERATION;
+
+				var pss = player.ship.GetComponentsInChildren<ParticleSystem> ();
+				foreach (ParticleSystem ps in pss) {
+					var emission = ps.emission;
+					emission.enabled = false;
+				}
+			} else {
+				var pss = player.ship.GetComponentsInChildren<ParticleSystem> ();
+				foreach (ParticleSystem ps in pss) {
+					var emission = ps.emission;
+					emission.enabled = false;
+				}
 			}
 			// No friction in space...
 			//      velocity = 0.8f * velocity;
@@ -62,6 +95,11 @@ public class Movement : Action
 			// Brake
 			if (Input.GetKey (KeyCode.Q)) {
 				velocity *= 0.95f;
+			}
+
+            // We don't use move but we set it not 0 so energy gets used up
+			if (velocity.magnitude > 0) {
+				move = 1;
 			}
 
 			//player.CmdShipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));

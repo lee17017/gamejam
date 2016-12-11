@@ -62,8 +62,10 @@ public class Shoot : Action {
 
         CmdSyncBarrel(barrel.transform.localRotation);
         CmdSyncBase(base001.transform.localRotation);
-        if (Input.GetButton("Fire1") && player.ship.timer<=0)
+        if (Input.GetButton("Fire1") && player.ship.timer<=0 && !player.energyDown)
         {
+			// Ugly...	
+			Component.FindObjectOfType<ScreenShake>().ShakeIt ();
             player.ship.timer = player.ship.coolDown;
             player.CmdFire();
 

@@ -11,17 +11,27 @@ public class Player : NetworkBehaviour {
     public GameObject bulletPref;
     public GameObject asteroidPrefab;
     private float timeTillNewAsteroid;
+    [SerializeField]
     private float timeTillNextCycle;
+    private bool cycleWarning;
+    public Texture textureCycleWarning;
 
     [SyncVar]
     public float energy;
     [SyncVar]
     public int hitpoints;
+    public bool energyDown;
+
+    [SyncVar]
+    public float energyDiff;
 
 	// Use this for initialization
 	void Start ()
     {
         ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
+
+        timeTillNextCycle = Random.Range(30,60);
+        timeTillNewAsteroid = Random.Range(5, 10);
 
         energy = 20;
         hitpoints = 100;
@@ -33,10 +43,33 @@ public class Player : NetworkBehaviour {
             ship.cams[state].enabled = true;
         }
 	}
+
+    void LateUpdate()
+    {
+        if (!isServer)
+            return;
+        
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (players[i] != gameObject)
+                energyDiff += players[i].GetComponent<Player>().energyDiff;
+        }
+
+        energyDiff -= 2 * Time.deltaTime;
+        CmdSetEnergy(energy - energyDiff);
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        energyDiff = 0;
+        if(energy <= 0)
+        {
+            energyDown = true;
+            StartCoroutine(energyDowntime());
+        }
+
         if (!isLocalPlayer)
         {
             return;
@@ -49,9 +82,6 @@ public class Player : NetworkBehaviour {
         
         if(isServer)
         {
-            //Energy Reg 2/s
-            gainEnergy(2f * Time.deltaTime);
-
             //Asteroid Spawns
             if(timeTillNewAsteroid <= 0)
             {
@@ -67,7 +97,8 @@ public class Player : NetworkBehaviour {
             //CYCLE
             if(timeTillNextCycle <= 0)
             {
-
+                timeTillNextCycle = Random.Range(30, 60);
+                StartCoroutine(cycle());
             }
             else
             {
@@ -78,15 +109,33 @@ public class Player : NetworkBehaviour {
 
     void OnGUI()
     {
-        GUI.Label(new Rect(Screen.width - 100, Screen.height - 50, 100, 25), "HP:\t" + hitpoints);
-        GUI.Label(new Rect(Screen.width - 100, Screen.height - 25, 100, 25), "Energy:\t" + (int)energy);
+        float width = Screen.width;
+        float height = Screen.height;
+        GUI.Label(new Rect(width - 100, height - 50, 100, 25), "HP:\t" + hitpoints);
+        if(energyDown)
+            GUI.Label(new Rect(width - 100, height - 25, 100, 25), "Energy down!");
+        else
+            GUI.Label(new Rect(width - 100, height - 25, 100, 25), "Energy:\t" + (int)energy);
+
+        if(cycleWarning)
+        {
+            GUI.DrawTexture(new Rect(width / 2 - 200, height / 2 - 200, 400, 400), textureCycleWarning);
+        }
     }
 
     public IEnumerator cycle()
     {
-        //wARNING
-        yield return new WaitForSeconds(3f);
+        cycleWarning = true;
+        yield return new WaitForSeconds(1.5f);
+        cycleWarning = false;
         CmdCycle();
+    }
+
+    public IEnumerator energyDowntime()
+    {
+        yield return new WaitForSeconds(5f);
+        energy = 20;
+        energyDown = false;
     }
 
     public void takeDamage(int damage)
@@ -98,17 +147,9 @@ public class Player : NetworkBehaviour {
         CmdSetHP(hitpoints - damage);
     }
 
-    public bool useEnergy(float energy)
+    public void useEnergy(float energy)
     {
-        if(this.energy < energy)
-        {
-            return false;
-        }
-        else
-        {
-            CmdSetEnergy(this.energy - energy);
-            return true;
-        }
+        energyDiff += energy;
     }
 
     public void gainEnergy(float energy)
@@ -130,9 +171,11 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdCycle()
     {
-        GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Player>().RpcCycle();
-        GameObject.FindGameObjectsWithTag("Player")[1].GetComponent<Player>().RpcCycle();
-        GameObject.FindGameObjectsWithTag("Player")[2].GetComponent<Player>().RpcCycle();
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i].GetComponent<Player>().RpcCycle();
+        }
     }
 
     private void CycleCams()
