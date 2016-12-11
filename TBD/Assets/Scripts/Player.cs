@@ -95,7 +95,7 @@ public class Player : NetworkBehaviour
         {
             if (players[i] != gameObject)
                 energyDiff += players[i].GetComponent<Player>().energyDiff;
-            Debug.Log(Time.frameCount + " " + energyDiff);
+            //Debug.Log(Time.frameCount + " " + energyDiff);
         }
             energyDiff -= 2 * Time.deltaTime;
             CmdSetEnergy(energy - energyDiff);

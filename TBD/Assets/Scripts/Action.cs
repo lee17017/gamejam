@@ -14,6 +14,14 @@ public class Action : NetworkBehaviour {
 
     public virtual void reset()
     {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");        
+        for(int i = 0; i < players.Length; i++)
+        {
+            if(players[i].GetComponent<Player>().isLocalPlayer)
+            {
+                player = players[i].GetComponent<Player>();
+            }
+        }
         return;
     }
 
