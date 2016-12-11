@@ -13,24 +13,28 @@ public class GegnerSpShBeh : NetworkBehaviour {
     GameObject Projectile;
     public ParticleSystem Explosion;
     public ParticleSystem Explosion2;
+    private Transform spaceship;
 
 	void Start () {
         //Projectile
-	}
+        spaceship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>().transform;
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        Transform spaceship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>().transform;
         transform.LookAt(spaceship);
 
-        if (Vector2.Distance(new Vector2(gameObject.transform.position.x, gameObject.transform.position.z), new Vector2(spaceship.transform.position.x, spaceship.transform.position.z)) <= radius)
+        if(!attacking)
         {
-            attacking = true;
-            StartCoroutine(Attack());
-        }
-        else if(!attacking)
-        {
-            transform.position = transform.position + transform.forward * speed * Time.deltaTime;
+            if (Vector2.Distance(new Vector2(gameObject.transform.position.x, gameObject.transform.position.z), new Vector2(spaceship.transform.position.x, spaceship.transform.position.z)) <= radius)
+            {
+                attacking = true;
+                StartCoroutine(Attack());
+            }
+            else
+            {
+                transform.position = transform.position + transform.forward * speed * Time.deltaTime;
+            }
         }
 
 	}
@@ -79,6 +83,6 @@ public class GegnerSpShBeh : NetworkBehaviour {
         yield return new WaitForSeconds(1f);
         tmp = (GameObject)Instantiate(Projectile, gameObject.transform);
         tmp.GetComponent<Bullet>().friendly = false;
-
+        attacking = false;
     }
 }
