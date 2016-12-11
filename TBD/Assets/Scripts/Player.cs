@@ -36,7 +36,7 @@ public class Player : NetworkBehaviour {
         if (isLocalPlayer)
         {
             ship.player = this;
-            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1 + 2) % 3;
+            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1 + 1) % 3;
             ship.cams[state].enabled = true;
         }
 	}
@@ -132,15 +132,9 @@ public class Player : NetworkBehaviour {
 
     public bool useEnergy(float energy)
     {
-        if(this.energy < energy)
-        {
-            return false;
-        }
-        else
-        {
-            CmdSetEnergy(this.energy - energy);
-            return true;
-        }
+         CmdSetEnergy(this.energy - energy);
+         return true;
+        
     }
 
     public void gainEnergy(float energy)
