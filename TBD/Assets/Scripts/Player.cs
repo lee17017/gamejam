@@ -65,6 +65,8 @@ public class Player : NetworkBehaviour {
         ship.cams[3].enabled = false;
         if (isLocalPlayer)
         {
+            Cursor.visible = false;
+            //Cursor.lockState = CursorLockMode.Locked;//Achtung
             ship.cams[state].enabled = true;
             Destroy(GameObject.Find("CanvasMen"));
         }
