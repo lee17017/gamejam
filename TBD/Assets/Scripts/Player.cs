@@ -8,17 +8,19 @@ public class Player : NetworkBehaviour {
     public SpaceShip ship;
     public Action[] actions;
     public AudioSource alarm;
-
+    public GameObject cursor;
     [SyncVar]
     public int state;
     public GameObject bulletPref;
     public GameObject asteroidPrefab;
+    public GameObject asteroidPrefab2;
     private float timeTillNewAsteroid;
     [SerializeField]
     private float timeTillNextCycle;
     private bool cycleWarning;
     public Texture textureCycleWarning;
 
+    private float maxEnergy = 100f;
     [SyncVar]
     public float energy;
     [SyncVar]
@@ -43,7 +45,7 @@ public class Player : NetworkBehaviour {
         timeTillNextCycle = Random.Range(30,60);
         timeTillNewAsteroid = Random.Range(5, 10);
 
-        energy = 20;
+        energy = 50;
         hitpoints = 100;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         if(players.Length > 0)
@@ -54,7 +56,7 @@ public class Player : NetworkBehaviour {
         {
 
             ship.player = this;
-            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1)%3;
+            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1)%3;                
             CmdState(state);
             GameObject.Find("Button").GetComponent<Transform>().transform.position = GameObject.Find("Button").GetComponent<Transform>().transform.position + new Vector3(0, -30 * state, 0);
             Debug.Log(state);
@@ -67,7 +69,9 @@ public class Player : NetworkBehaviour {
         ship.cams[3].enabled = false;
         if (isLocalPlayer)
         {
-            Cursor.visible = false;
+            if (state == 1)
+                Instantiate(cursor, Vector3.zero, Quaternion.identity);
+                Cursor.visible = false;
             //Cursor.lockState = CursorLockMode.Locked;//Achtung
             ship.cams[state].enabled = true;
             Destroy(GameObject.Find("CanvasMen"));
@@ -80,17 +84,19 @@ public class Player : NetworkBehaviour {
             return;
         if (!isServer)
             return;
-        
+
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
         {
             if (players[i] != gameObject)
                 energyDiff += players[i].GetComponent<Player>().energyDiff;
         }
-
-        energyDiff -= 2 * Time.deltaTime;
-        CmdSetEnergy(energy - energyDiff);
-    }
+        if (isServer)
+        {
+            energyDiff -= 2 * Time.deltaTime;
+            CmdSetEnergy(energy - energyDiff);
+        }
+    }    
 	
 	// Update is called once per frame
 	void Update ()
@@ -277,7 +283,17 @@ public class Player : NetworkBehaviour {
         pos *= 100;
         pos.y /= 35;
         pos.y = 0;
-        var asteroid = (GameObject)Instantiate(asteroidPrefab, ship.transform.position + pos, ship.transform.rotation);
+        //Randomwert
+        float tmp =Random.Range(1, 6);
+        GameObject asteroid;
+        if (tmp < 4)
+        {
+            asteroid = (GameObject)Instantiate(asteroidPrefab, ship.transform.position + pos, ship.transform.rotation);
+        }
+        else
+        {
+            asteroid = (GameObject)Instantiate(asteroidPrefab2, ship.transform.position + pos, ship.transform.rotation);
+        }
         NetworkServer.SpawnWithClientAuthority(asteroid, gameObject);
         Destroy(asteroid, 30f);
     }
@@ -301,6 +317,8 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdSetEnergy(float energy)
     {
+        if (energy >= maxEnergy)
+            energy = maxEnergy;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for(int i = 0; i < players.Length; i++)
         {

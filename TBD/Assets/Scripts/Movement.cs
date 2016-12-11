@@ -16,6 +16,7 @@ public class Movement : Action
 
     private float rotSpeed = 100.0f;
     private Vector3 posBefore = Vector3.zero;
+    private Vector3 posBefore2 = Vector3.zero;
     private float rotBefore = 0;
 
 
@@ -51,8 +52,15 @@ public class Movement : Action
 			if (Mathf.Abs (rotBefore - y) > 0.5f) {
 				CmdRota (y);
 				rotBefore = y;
-			}
-		} else {
+            }
+            player.shipMove(new Vector3(0, 0, move), new Vector3(0, rot, 0));
+            if (Vector3.Distance(posBefore, player.ship.transform.position) > 10f)
+            {
+                posBefore2 = player.ship.transform.position;
+                player.useEnergy(1f);
+            }
+
+        } else {
 			float acceleration = 0;
 			if (Input.GetKey (KeyCode.W)) {
 				acceleration = ACCELERATION;

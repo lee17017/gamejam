@@ -9,10 +9,10 @@ public class Shoot : Action {
     float pitch;
     float mouseSensitivity = 5f;
     float verticalRot = 0;
-    float targetRotation = -125f;
+    float targetRotation = -150f;
     float defaultPos;//=-125f;
-    float rangeLow = -180f;
-    float rangeHi = -90f;
+    float rangeLow = -160f;
+    float rangeHi = -100f;
     //base
     float yaw;
     float targetRot=0;
