@@ -19,6 +19,16 @@ public class Shoot : Action {
     public float defaultX = -90f;
     public float range;
 
+    public override void Reset()
+    {
+        verticalRot = 0;
+        targetRotation = -150f;
+        rangeLow = -160f;
+        rangeHi = -100f;
+        targetRot = 0;
+        defaultX = -90f;
+    }
+
     public override void Move()
     {
         if (barrel == null && base001 == null)

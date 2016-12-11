@@ -19,6 +19,10 @@ public class Movement : Action
     private Vector3 posBefore2 = Vector3.zero;
     private float rotBefore = 0;
 
+    public override void reset()
+    {
+        velocity = new Vector3(0, 0, 0);
+    }
 
     public override void Move()
     {

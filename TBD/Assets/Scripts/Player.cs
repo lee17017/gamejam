@@ -85,20 +85,17 @@ public class Player : NetworkBehaviour
     {
         if (paused)
             return;
-        if (!isServer)
+        if (!isServer || !isLocalPlayer)
             return;
-
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
         {
             if (players[i] != gameObject)
                 energyDiff += players[i].GetComponent<Player>().energyDiff;
         }
-        if (isServer)
-        {
             energyDiff -= 2 * Time.deltaTime;
             CmdSetEnergy(energy - energyDiff);
-        }
+        
     }
 
     // Update is called once per frame
@@ -203,6 +200,7 @@ public class Player : NetworkBehaviour
             cycleWarning = false;
             state++;
             state = state % 3;
+            actions[state].reset();
             CmdState(state);
             CycleCams();
             if (state == 1)
@@ -392,13 +390,13 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdCamUpdate(Quaternion rot)
     {
-        ship.cam.localRotation = rot;
+        ship.cam.rotation = rot;
         RpcCamUpdate(rot);
     }
 
     [ClientRpc]
     public void RpcCamUpdate(Quaternion rot)
     {
-        ship.cam.localRotation = rot;
+        ship.cam.rotation = rot;
     }
 }
