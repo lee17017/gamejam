@@ -90,16 +90,17 @@ public class Player : NetworkBehaviour
             return;
         if (!isServer || !isLocalPlayer)
             return;
-        Debug.Log(Time.frameCount);
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
         {
             if (players[i] != gameObject)
                 energyDiff += players[i].GetComponent<Player>().energyDiff;
+            Debug.Log(Time.frameCount + " " + energyDiff);
         }
             energyDiff -= 2 * Time.deltaTime;
             CmdSetEnergy(energy - energyDiff);
-        
+
+        energyDiff = 0;
     }
 
     // Update is called once per frame
@@ -122,7 +123,6 @@ public class Player : NetworkBehaviour
         {
             return;
         }
-        energyDiff = 0;
         if (Input.GetKeyDown(KeyCode.Space))
         {
             CmdCycle();
