@@ -1,0 +1,91 @@
+Initialize engine version: 5.5.0f3 (38b4efef76f0)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: AMD Radeon R7 M265 (ID=0x6604)
+    Vendor:   ATI
+    VRAM:     2027 MB
+    Driver:   10.18.15.4248
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
+- Completed reload, in  0.055 seconds
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\System.dll (this message is harmless)
+desktop: 1366x768 60Hz; virtual: 1366x768 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+Initialize engine version: 5.5.0f3 (38b4efef76f0)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: AMD Radeon R7 M265 (ID=0x6604)
+    Vendor:   ATI
+    VRAM:     2027 MB
+    Driver:   10.18.15.4248
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
+Loading C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
+- Completed reload, in  0.034 seconds
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\liou_000\Desktop\gamejam\TBD\asdf_Data\Managed\System.dll (this message is harmless)
+desktop: 1366x768 60Hz; virtual: 1366x768 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+UnloadTime: 1.175193 ms
+<RI> Initialized touch support.
+UnloadTime: 1.410074 ms
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 3454 -> priority: 1 
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 690 -> priority: 1 
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.337123 ms
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 479.
+Total: 0.321727 ms (FindLiveObjects: 0.021316 ms CreateObjectMapping: 0.024080 ms MarkObjects: 0.270803 ms  DeleteObjects: 0.004737 ms)
+
+IndexOutOfRangeException: Array index is out of range.
+  at StarFlares.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.356466 ms
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 479.
+Total: 0.315016 ms (FindLiveObjects: 0.022501 ms CreateObjectMapping: 0.024080 ms MarkObjects: 0.262908 ms  DeleteObjects: 0.004737 ms)
+
+IndexOutOfRangeException: Array index is out of range.
+  at StarFlares.Start () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+IndexOutOfRangeException: Array index is out of range.
+  at Player.CmdCycle () [0x00000] in <filename unknown>:0 
+  at Player.CallCmdCycle () [0x00000] in <filename unknown>:0 
+  at Player.Update () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+

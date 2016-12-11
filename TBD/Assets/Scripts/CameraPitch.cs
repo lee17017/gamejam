@@ -7,8 +7,8 @@ public class CameraPitch : MonoBehaviour {
     float pitch;
     float mouseSensitivity = 5f;
     float targetRotation = 0;
-    float range = 60f;
-    float defaultpos = 110f;
+    float range = 45;
+    float defaultpos = 45;
 
 
     // Use this for initialization

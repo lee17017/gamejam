@@ -11,17 +11,24 @@ public class Player : NetworkBehaviour {
     public GameObject bulletPref;
     public GameObject asteroidPrefab;
     private float timeTillNewAsteroid;
+    [SerializeField]
     private float timeTillNextCycle;
+    private bool cycleWarning;
+    public Texture textureCycleWarning;
 
     [SyncVar]
     public float energy;
     [SyncVar]
     public int hitpoints;
+    public bool energyDown;
 
 	// Use this for initialization
 	void Start ()
     {
         ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
+
+        timeTillNextCycle = Random.Range(10, 10);
+        timeTillNewAsteroid = Random.Range(5, 10);
 
         energy = 20;
         hitpoints = 100;
@@ -37,6 +44,12 @@ public class Player : NetworkBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        if(energy <= 0)
+        {
+            energyDown = true;
+            StartCoroutine(energyDowntime());
+        }
+
         if (!isLocalPlayer)
         {
             return;
@@ -67,7 +80,8 @@ public class Player : NetworkBehaviour {
             //CYCLE
             if(timeTillNextCycle <= 0)
             {
-
+                timeTillNextCycle = Random.Range(5, 10);
+                StartCoroutine(cycle());
             }
             else
             {
@@ -78,15 +92,33 @@ public class Player : NetworkBehaviour {
 
     void OnGUI()
     {
-        GUI.Label(new Rect(Screen.width - 100, Screen.height - 50, 100, 25), "HP:\t" + hitpoints);
-        GUI.Label(new Rect(Screen.width - 100, Screen.height - 25, 100, 25), "Energy:\t" + (int)energy);
+        float width = Screen.width;
+        float height = Screen.height;
+        GUI.Label(new Rect(width - 100, height - 50, 100, 25), "HP:\t" + hitpoints);
+        if(energyDown)
+            GUI.Label(new Rect(width - 100, height - 25, 100, 25), "Energy down!");
+        else
+            GUI.Label(new Rect(width - 100, height - 25, 100, 25), "Energy:\t" + (int)energy);
+
+        if(cycleWarning)
+        {
+            GUI.DrawTexture(new Rect(width / 2 - 200, height / 2 - 200, 400, 400), textureCycleWarning);
+        }
     }
 
     public IEnumerator cycle()
     {
-        //wARNING
+        cycleWarning = true;
         yield return new WaitForSeconds(3f);
+        cycleWarning = false;
         CmdCycle();
+    }
+
+    public IEnumerator energyDowntime()
+    {
+        yield return new WaitForSeconds(5f);
+        energy = 20;
+        energyDown = false;
     }
 
     public void takeDamage(int damage)
@@ -167,7 +199,7 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdFire()
     {
-        var bullet = (GameObject)Instantiate(bulletPref, ship.barrel.position, ship.barrel.rotation);
+        var bullet = (GameObject)Instantiate(bulletPref, ship.cam.position, ship.cam.rotation);
         NetworkServer.SpawnWithClientAuthority(bullet,gameObject);
         Destroy(bullet, 4.0f);
     }
