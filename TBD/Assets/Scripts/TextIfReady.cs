@@ -15,7 +15,6 @@ public class TextIfReady : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        Debug.Log(players.Length);
         for (int i = 0; i < players.Length; i++)
         {
             if (players[i].GetComponent<Player>().state == row)

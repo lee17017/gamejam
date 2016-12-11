@@ -7,6 +7,8 @@ public class Player : NetworkBehaviour {
     
     public SpaceShip ship;
     public Action[] actions;
+    public AudioSource alarm;
+
     [SyncVar]
     public int state;
     public GameObject bulletPref;
@@ -140,7 +142,7 @@ public class Player : NetworkBehaviour {
             if(timeTillNextCycle <= 0)
             {
                 timeTillNextCycle = Random.Range(30, 60);
-                StartCoroutine(cycle());
+                CmdCycle();
             }
             else
             {
@@ -167,10 +169,17 @@ public class Player : NetworkBehaviour {
 
     public IEnumerator cycle()
     {
-        cycleWarning = true;
-        yield return new WaitForSeconds(1.5f);
-        cycleWarning = false;
-        CmdCycle();
+        if (isLocalPlayer)
+        {
+            alarm.Play();
+            cycleWarning = true;
+            yield return new WaitForSeconds(2.5f);
+            cycleWarning = false;
+            state++;
+            state = state % 3;
+            CmdState(state);
+            CycleCams();
+        }
     }
 
     public IEnumerator energyDowntime()
@@ -202,13 +211,7 @@ public class Player : NetworkBehaviour {
     [ClientRpc]
     public void RpcCycle()
     {
-        if (isLocalPlayer)
-        {
-            state++;
-            state = state % 3;
-            CmdState(state);
-            CycleCams();
-        }
+        StartCoroutine(cycle());
     }
 
     [Command]
