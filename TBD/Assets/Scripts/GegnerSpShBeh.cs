@@ -11,6 +11,8 @@ public class GegnerSpShBeh : NetworkBehaviour {
     public float radius;
     bool attacking=false;
     GameObject Projectile;
+    public ParticleSystem Explosion;
+    public ParticleSystem Explosion2;
 
 	void Start () {
         //Projectile
@@ -42,6 +44,7 @@ public class GegnerSpShBeh : NetworkBehaviour {
 
         if (other.tag == "bullet"&&other.GetComponent<Bullet>().friendly)
         {
+            Instantiate(Explosion, gameObject.transform);
             Destroy(gameObject);
         }
         else if (other.tag == "SpaceShip")
@@ -51,6 +54,7 @@ public class GegnerSpShBeh : NetworkBehaviour {
         }
         else if (other.tag == "shield")
         {
+            Instantiate(Explosion2, gameObject.transform);
             Destroy(gameObject);
         }
     }

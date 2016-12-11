@@ -9,6 +9,8 @@ public class MissileAI : MonoBehaviour {
     public GameObject target;
     public float damage;
     public float health = 10;
+    public ParticleSystem Explosion;
+    public ParticleSystem Explosion2;
     // Use this for initialization
     void Start () {
 		
@@ -36,6 +38,17 @@ public class MissileAI : MonoBehaviour {
         else if (c.tag == "bullet") {
             health = -5f;
         }
-        if (health <= 0f) { DestroyObject(this.gameObject); }
+        if (health <= 0f) {
+            float tmp = Random.Range(1, 6);
+            if (tmp < 4)
+            {
+                Instantiate(Explosion, gameObject.transform);
+            }
+            else
+            {
+                Instantiate(Explosion2, gameObject.transform);
+            }
+            DestroyObject(this.gameObject); 
+        }
     }
 }
