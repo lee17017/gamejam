@@ -14,8 +14,9 @@ public class Player : NetworkBehaviour {
     public GameObject bulletPref;
     public GameObject asteroidPrefab;
     public GameObject asteroidPrefab2;
+    public GameObject missilePrefab;
     private float timeTillNewAsteroid;
-    [SerializeField]
+    public float timeTillNewMissile;
     private float timeTillNextCycle;
     private bool cycleWarning;
     public Texture textureCycleWarning;
@@ -44,6 +45,7 @@ public class Player : NetworkBehaviour {
 
         timeTillNextCycle = Random.Range(30,60);
         timeTillNewAsteroid = Random.Range(5, 10);
+        timeTillNewMissile = Random.Range(20, 30);
 
         energy = 50;
         hitpoints = 100;
@@ -137,11 +139,23 @@ public class Player : NetworkBehaviour {
             {
                 Vector3 pos = Random.onUnitSphere;
                 CmdSpawnAsteroid(pos);
-                timeTillNewAsteroid = Random.Range(5, 10);
+                timeTillNewAsteroid = Random.Range(3, 10);
             }
             else
             {
                 timeTillNewAsteroid -= Time.deltaTime;
+            }
+
+            //Missile Spawns
+            if(timeTillNewMissile <= 0)
+            {
+                Vector3 pos = Random.onUnitSphere;
+                CmdSpawnMissile(pos);
+                timeTillNewMissile = Random.Range(20, 30);
+            }
+            else
+            {
+                timeTillNewMissile -= Time.deltaTime;
             }
 
             //CYCLE
@@ -296,6 +310,16 @@ public class Player : NetworkBehaviour {
         }
         NetworkServer.SpawnWithClientAuthority(asteroid, gameObject);
         Destroy(asteroid, 30f);
+    }
+
+    [Command]
+    public void CmdSpawnMissile(Vector3 pos)
+    {
+        pos *= 200;
+        pos.y = 0;
+        GameObject missile = (GameObject)Instantiate(missilePrefab, ship.transform.position + pos, ship.transform.rotation);
+        missile.GetComponent<MissileAI>().target = ship.gameObject;
+        NetworkServer.SpawnWithClientAuthority(missile, gameObject);
     }
 
     [Command]
