@@ -76,7 +76,7 @@ public class Shoot : Action {
         if (Input.GetButton("Fire1") && player.ship.timer<=0 && !player.energyDown)
         {
 			// Ugly...	
-			Component.FindObjectOfType<ScreenShake>().ShakeIt ();
+			//Component.FindObjectOfType<ScreenShake>().ShakeIt ();
             player.ship.timer = player.ship.coolDown;
             player.CmdFire();
 
