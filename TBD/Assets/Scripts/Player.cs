@@ -42,7 +42,6 @@ public class Player : NetworkBehaviour {
     {
         paused = true;
         ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
-
         timeTillNextCycle = Random.Range(30,60);
         timeTillNewAsteroid = Random.Range(5, 10);
         timeTillNewMissile = Random.Range(20, 30);
@@ -73,7 +72,7 @@ public class Player : NetworkBehaviour {
         {
             if (state == 1)
                 Instantiate(cursor, Vector3.zero, Quaternion.identity);
-                Cursor.visible = false;
+            Cursor.visible = false;
             //Cursor.lockState = CursorLockMode.Locked;//Achtung
             ship.cams[state].enabled = true;
             Destroy(GameObject.Find("CanvasMen"));
@@ -199,6 +198,8 @@ public class Player : NetworkBehaviour {
             state = state % 3;
             CmdState(state);
             CycleCams();
+            if (state == 1)
+                Instantiate(cursor, Vector3.zero, Quaternion.identity);
         }
     }
 
@@ -250,6 +251,10 @@ public class Player : NetworkBehaviour {
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
         {
+            GameObject a = GameObject.Find("Crosshair(Clone)");
+            if (a != null)
+                Destroy(a); 
+
             players[i].GetComponent<Player>().RpcCycle();
         }
     }
