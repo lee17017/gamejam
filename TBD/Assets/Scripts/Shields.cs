@@ -5,37 +5,34 @@ using UnityEngine.Networking;
 
 public class Shields : Action {
 
+    private float viewRotation;
+
     public override void Move()
     {
-        if(player.ship.shieldActivated)
+        if(Input.GetAxis("Mouse X") != 0)
         {
-            float deltaRot = player.ship.shieldRotSpeed * Input.GetAxis("Horizontal") * Time.deltaTime;
-            CmdSetShieldRotation(player.ship.shieldRotation + deltaRot);
-
-            if (Input.GetMouseButtonDown(1))
-            {
-                CmdTurnOffShield();
-            }
-
-            //Energy cost
-            player.useEnergy(1f * Time.deltaTime);
+            float deltaRot = player.ship.shieldRotSpeed * Input.GetAxis("Mouse X") * Time.deltaTime;
+            viewRotation += deltaRot;
         }
-        else
-        {
-            if (Input.GetMouseButtonDown(1) && player.energy > 5f)
-            {
-                Vector3 mPos = Input.mousePosition;
-                float width = Screen.width;
-                float height = Screen.height;
-                if(mPos.x > 0 && mPos.x < width && mPos.y > 0 && mPos.y < height)
-                {
-                    CmdTurnOnShield(Mathf.Atan2(mPos.y - height / 2, mPos.x - width / 2) * -180 / Mathf.PI);
-                }
 
-                //Energy cost
+        player.ship.GetComponentInChildren<CameraFollowShield>().transform.rotation = Quaternion.AngleAxis(viewRotation, Vector3.up);
+
+        if(!player.energyDown)
+        {
+            if(Input.GetMouseButtonDown(0) && !player.ship.shieldActivated)
+            {
+                StartCoroutine(activateShield(viewRotation - 90));
                 player.useEnergy(5f);
             }
         }
+
+    }
+
+    public IEnumerator activateShield(float angle)
+    {
+            CmdTurnOnShield(angle);
+            yield return new WaitForSeconds(3f);
+            CmdTurnOffShield();
     }
 
     [Command]
@@ -71,7 +68,7 @@ public class Shields : Action {
     [ClientRpc]
     public void RpcTurnOnShield(float degree)
     {
-        StartCoroutine(player.ship.turnOnShield());
+        player.ship.shieldActivated = true;
         player.ship.shieldRotation = degree;
     }
 }

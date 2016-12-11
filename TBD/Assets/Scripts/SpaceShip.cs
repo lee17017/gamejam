@@ -24,10 +24,4 @@ public class SpaceShip : MonoBehaviour {
 
         shield.GetComponent<Collider>().enabled = shieldActivated;
     }
-
-    public IEnumerator turnOnShield()
-    {
-        yield return new WaitForSeconds(1f);
-        shieldActivated = true;
-    }
 }
