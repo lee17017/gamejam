@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class Player : NetworkBehaviour
 {
@@ -83,6 +84,8 @@ public class Player : NetworkBehaviour
     }
     void LateUpdate()
     {
+        if (hitpoints <= 0)
+            SceneManager.LoadScene("RIP");
         if (paused)
             return;
         if (!isServer || !isLocalPlayer)
