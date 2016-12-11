@@ -20,6 +20,7 @@ public class Player : NetworkBehaviour {
     private float timeTillNextCycle;
     private bool cycleWarning;
     public Texture textureCycleWarning;
+    public Texture[] roleSprites = new Texture[3];
 
     private float maxEnergy = 100f;
     [SyncVar]
@@ -184,6 +185,11 @@ public class Player : NetworkBehaviour {
         if(cycleWarning)
         {
             GUI.DrawTexture(new Rect(width / 2 - 200, height / 2 - 200, 400, 400), textureCycleWarning);
+        }
+
+        if(isLocalPlayer)
+        {
+            GUI.DrawTexture(new Rect(width - 50, 0, 50, 50), roleSprites[state]);
         }
     }
 
