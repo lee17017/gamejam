@@ -81,17 +81,19 @@ public class Player : NetworkBehaviour {
             return;
         if (!isServer)
             return;
-        
+
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
         {
             if (players[i] != gameObject)
                 energyDiff += players[i].GetComponent<Player>().energyDiff;
         }
-
-        energyDiff -= 2 * Time.deltaTime;
-        CmdSetEnergy(energy - energyDiff);
-    }
+        if (isServer)
+        {
+            energyDiff -= 2 * Time.deltaTime;
+            CmdSetEnergy(energy - energyDiff);
+        }
+    }    
 	
 	// Update is called once per frame
 	void Update ()
