@@ -90,6 +90,7 @@ public class Player : NetworkBehaviour
             return;
         if (!isServer || !isLocalPlayer)
             return;
+        Debug.Log(Time.frameCount);
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
         {
@@ -116,17 +117,12 @@ public class Player : NetworkBehaviour
                 return;
             }
         }
-        energyDiff = 0;
-        if (energy <= 0)
-        {
-            energyDown = true;
-            StartCoroutine(energyDowntime());
-        }
 
         if (!isLocalPlayer)
         {
             return;
         }
+        energyDiff = 0;
         if (Input.GetKeyDown(KeyCode.Space))
         {
             CmdCycle();
@@ -135,6 +131,12 @@ public class Player : NetworkBehaviour
 
         if (isServer)
         {
+            if (energy <= 0)
+            {
+                energyDown = true;
+                StartCoroutine(energyDowntime());
+            }
+
             //Asteroid Spawns
             if (timeTillNewAsteroid <= 0)
             {
