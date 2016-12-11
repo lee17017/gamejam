@@ -15,6 +15,7 @@ public class SpaceShip : MonoBehaviour {
     public float shieldRotSpeed;
     public float shieldRotation;
     public Transform base001, barrel, cam;
+
     void Update()
     {
         shieldRota.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y + shieldRotation + 90, 0);
@@ -24,4 +25,5 @@ public class SpaceShip : MonoBehaviour {
 
         shield.GetComponent<Collider>().enabled = shieldActivated;
     }
+   
 }
