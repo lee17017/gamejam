@@ -19,6 +19,7 @@ public class Player : NetworkBehaviour {
     private bool cycleWarning;
     public Texture textureCycleWarning;
 
+    private float maxEnergy = 100f;
     [SyncVar]
     public float energy;
     [SyncVar]
@@ -43,7 +44,7 @@ public class Player : NetworkBehaviour {
         timeTillNextCycle = Random.Range(30,60);
         timeTillNewAsteroid = Random.Range(5, 10);
 
-        energy = 20;
+        energy = 50;
         hitpoints = 100;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         if(players.Length > 0)
@@ -301,6 +302,8 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdSetEnergy(float energy)
     {
+        if (energy >= maxEnergy)
+            energy = maxEnergy;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for(int i = 0; i < players.Length; i++)
         {

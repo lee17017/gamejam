@@ -22,7 +22,7 @@ public class Shields : Action {
             if(Input.GetMouseButtonDown(0) && !player.ship.shieldActivated)
             {
                 StartCoroutine(activateShield(viewRotation - 90));
-                player.useEnergy(5f);
+                player.useEnergy(10f);
             }
         }
 
@@ -31,7 +31,7 @@ public class Shields : Action {
     public IEnumerator activateShield(float angle)
     {
             CmdTurnOnShield(angle);
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2f);
             CmdTurnOffShield();
     }
 
