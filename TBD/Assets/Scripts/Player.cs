@@ -22,6 +22,9 @@ public class Player : NetworkBehaviour {
     public int hitpoints;
     public bool energyDown;
 
+    [SyncVar]
+    public float energyDiff;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -36,14 +39,31 @@ public class Player : NetworkBehaviour {
         if (isLocalPlayer)
         {
             ship.player = this;
-            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1 + 1) % 3;
+            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1 + 2) % 3;
             ship.cams[state].enabled = true;
         }
 	}
+
+    void LateUpdate()
+    {
+        if (!isServer)
+            return;
+        
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (players[i] != gameObject)
+                energyDiff += players[i].GetComponent<Player>().energyDiff;
+        }
+
+        energyDiff -= 2 * Time.deltaTime;
+        CmdSetEnergy(energy - energyDiff);
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        energyDiff = 0;
         if(energy <= 0)
         {
             energyDown = true;
@@ -62,9 +82,6 @@ public class Player : NetworkBehaviour {
         
         if(isServer)
         {
-            //Energy Reg 2/s
-            gainEnergy(2f * Time.deltaTime);
-
             //Asteroid Spawns
             if(timeTillNewAsteroid <= 0)
             {
@@ -130,11 +147,9 @@ public class Player : NetworkBehaviour {
         CmdSetHP(hitpoints - damage);
     }
 
-    public bool useEnergy(float energy)
+    public void useEnergy(float energy)
     {
-         CmdSetEnergy(this.energy - energy);
-         return true;
-        
+        energyDiff += energy;
     }
 
     public void gainEnergy(float energy)
@@ -156,9 +171,11 @@ public class Player : NetworkBehaviour {
     [Command]
     public void CmdCycle()
     {
-        GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Player>().RpcCycle();
-        GameObject.FindGameObjectsWithTag("Player")[1].GetComponent<Player>().RpcCycle();
-        GameObject.FindGameObjectsWithTag("Player")[2].GetComponent<Player>().RpcCycle();
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < players.Length; i++)
+        {
+            players[i].GetComponent<Player>().RpcCycle();
+        }
     }
 
     private void CycleCams()
