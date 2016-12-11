@@ -19,7 +19,7 @@ public class Shoot : Action {
     public float defaultX = -90f;
     public float range;
 
-    public override void Reset()
+    public override void reset()
     {
         verticalRot = 0;
         targetRotation = -150f;

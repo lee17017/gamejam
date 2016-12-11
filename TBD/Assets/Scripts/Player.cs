@@ -257,8 +257,7 @@ public class Player : NetworkBehaviour
         for (int i = 0; i < players.Length; i++)
         {
             GameObject a = GameObject.Find("Crosshair(Clone)");
-            if (a != null)
-                Destroy(a);
+            Destroy(a);
 
             players[i].GetComponent<Player>().RpcCycle();
         }

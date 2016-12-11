@@ -18,6 +18,7 @@ public class CameraPitch : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        
         //get value
         pitch = Input.GetAxis("Mouse Y") * mouseSensitivity;
         //set target
