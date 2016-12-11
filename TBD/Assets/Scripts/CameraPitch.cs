@@ -9,11 +9,11 @@ public class CameraPitch : MonoBehaviour {
     float targetRotation = 0;
     float range = 45;
     float defaultpos = 75;
-
+    public GameObject ship;
 
     // Use this for initialization
     void Start () {
-		
+
 	}
 	
 	// Update is called once per frame
@@ -27,7 +27,7 @@ public class CameraPitch : MonoBehaviour {
 
         //rotate
         //transform.Rotate(-pitch, 0, 0);
-        transform.localRotation = Quaternion.Euler(
-            transform.rotation.x, targetRotation, 90f);
-	}
+        ship.GetComponent<SpaceShip>().player.CmdCamUpdate(Quaternion.Euler(
+            transform.rotation.x, targetRotation, 90f)); 
+    }
 }

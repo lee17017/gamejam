@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Player : NetworkBehaviour {
-    
+public class Player : NetworkBehaviour
+{
+
     public SpaceShip ship;
     public Action[] actions;
     public AudioSource alarm;
@@ -38,36 +39,36 @@ public class Player : NetworkBehaviour {
     public bool ready;
 
     private bool paused;
-	//00 Use this for initialization
-	void Start ()
+    //00 Use this for initialization
+    void Start()
     {
         paused = true;
         ship = GameObject.Find("SpaceShip").GetComponent<SpaceShip>();
-        timeTillNextCycle = Random.Range(30,60);
+        timeTillNextCycle = Random.Range(30, 60);
         timeTillNewAsteroid = Random.Range(5, 10);
         timeTillNewMissile = Random.Range(20, 30);
 
         energy = 50;
         hitpoints = 100;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        if(players.Length > 0)
+        if (players.Length > 0)
             count = players[0].GetComponent<Player>().count;
-        
+
 
         if (isLocalPlayer)
         {
 
             ship.player = this;
-            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1)%3;                
+            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1) % 3;
             CmdState(state);
             GameObject.Find("Button").GetComponent<Transform>().transform.position = GameObject.Find("Button").GetComponent<Transform>().transform.position + new Vector3(0, -30 * state, 0);
             Debug.Log(state);
         }
-	}
+    }
 
     public void realStart()
     {
-        
+
         ship.cams[3].enabled = false;
         if (isLocalPlayer)
         {
@@ -78,7 +79,7 @@ public class Player : NetworkBehaviour {
             ship.cams[state].enabled = true;
             Destroy(GameObject.Find("CanvasMen"));
         }
-        
+
     }
     void LateUpdate()
     {
@@ -98,10 +99,10 @@ public class Player : NetworkBehaviour {
             energyDiff -= 2 * Time.deltaTime;
             CmdSetEnergy(energy - energyDiff);
         }
-    }    
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
         if (paused)
         {
@@ -116,7 +117,7 @@ public class Player : NetworkBehaviour {
             }
         }
         energyDiff = 0;
-        if(energy <= 0)
+        if (energy <= 0)
         {
             energyDown = true;
             StartCoroutine(energyDowntime());
@@ -131,11 +132,11 @@ public class Player : NetworkBehaviour {
             CmdCycle();
         }
         actions[state].Move();
-        
-        if(isServer)
+
+        if (isServer)
         {
             //Asteroid Spawns
-            if(timeTillNewAsteroid <= 0)
+            if (timeTillNewAsteroid <= 0)
             {
                 Vector3 pos = Random.onUnitSphere;
                 CmdSpawnAsteroid(pos);
@@ -147,7 +148,7 @@ public class Player : NetworkBehaviour {
             }
 
             //Missile Spawns
-            if(timeTillNewMissile <= 0)
+            if (timeTillNewMissile <= 0)
             {
                 Vector3 pos = Random.onUnitSphere;
                 CmdSpawnMissile(pos);
@@ -159,7 +160,7 @@ public class Player : NetworkBehaviour {
             }
 
             //CYCLE
-            if(timeTillNextCycle <= 0)
+            if (timeTillNextCycle <= 0)
             {
                 timeTillNextCycle = Random.Range(30, 60);
                 CmdCycle();
@@ -169,24 +170,24 @@ public class Player : NetworkBehaviour {
                 timeTillNextCycle -= Time.deltaTime;
             }
         }
-	}
+    }
 
     void OnGUI()
     {
         float width = Screen.width;
         float height = Screen.height;
         GUI.Label(new Rect(width - 100, height - 50, 100, 25), "HP:\t" + hitpoints);
-        if(energyDown)
+        if (energyDown)
             GUI.Label(new Rect(width - 100, height - 25, 100, 25), "Energy down!");
         else
             GUI.Label(new Rect(width - 100, height - 25, 100, 25), "Energy:\t" + (int)energy);
 
-        if(cycleWarning)
+        if (cycleWarning)
         {
             GUI.DrawTexture(new Rect(width / 2 - 200, height / 2 - 200, 400, 400), textureCycleWarning);
         }
 
-        if(isLocalPlayer)
+        if (isLocalPlayer)
         {
             GUI.DrawTexture(new Rect(width - 50, 0, 50, 50), roleSprites[state]);
         }
@@ -218,7 +219,7 @@ public class Player : NetworkBehaviour {
 
     public void takeDamage(int damage)
     {
-        if(!isServer)
+        if (!isServer)
         {
             return;
         }
@@ -259,7 +260,7 @@ public class Player : NetworkBehaviour {
         {
             GameObject a = GameObject.Find("Crosshair(Clone)");
             if (a != null)
-                Destroy(a); 
+                Destroy(a);
 
             players[i].GetComponent<Player>().RpcCycle();
         }
@@ -267,9 +268,9 @@ public class Player : NetworkBehaviour {
 
     private void CycleCams()
     {
-        for (int i=0;i<3;i++)
+        for (int i = 0; i < 3; i++)
         {
-            ship.cams[i].enabled = i==state;
+            ship.cams[i].enabled = i == state;
         }
     }
 
@@ -298,7 +299,7 @@ public class Player : NetworkBehaviour {
     public void CmdFire()
     {
         var bullet = (GameObject)Instantiate(bulletPref, ship.cam.position, ship.cam.rotation);
-        NetworkServer.SpawnWithClientAuthority(bullet,gameObject);
+        NetworkServer.SpawnWithClientAuthority(bullet, gameObject);
         Destroy(bullet, 4.0f);
     }
 
@@ -309,7 +310,7 @@ public class Player : NetworkBehaviour {
         pos.y /= 35;
         pos.y = 0;
         //Randomwert
-        float tmp =Random.Range(1, 6);
+        float tmp = Random.Range(1, 6);
         GameObject asteroid;
         if (tmp < 4)
         {
@@ -355,7 +356,7 @@ public class Player : NetworkBehaviour {
         if (energy >= maxEnergy)
             energy = maxEnergy;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        for(int i = 0; i < players.Length; i++)
+        for (int i = 0; i < players.Length; i++)
         {
             players[i].GetComponent<Player>().RpcSetEnergy(energy);
         }
@@ -374,7 +375,7 @@ public class Player : NetworkBehaviour {
             ready = true;
         else
             ready = false;
-        count = this.count + count;  
+        count = this.count + count;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
         {
@@ -386,5 +387,18 @@ public class Player : NetworkBehaviour {
     public void RpcUpdateCount(int count)
     {
         this.count = count;
+    }
+
+    [Command]
+    public void CmdCamUpdate(Quaternion rot)
+    {
+        ship.cam.localRotation = rot;
+        RpcCamUpdate(rot);
+    }
+
+    [ClientRpc]
+    public void RpcCamUpdate(Quaternion rot)
+    {
+        ship.cam.localRotation = rot;
     }
 }
