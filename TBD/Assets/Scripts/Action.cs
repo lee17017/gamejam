@@ -12,4 +12,9 @@ public class Action : NetworkBehaviour {
         return;
     }
 
+    public virtual void reset()
+    {
+        return;
+    }
+
 }

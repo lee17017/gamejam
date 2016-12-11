@@ -7,6 +7,11 @@ public class Shields : Action {
 
     private float viewRotation;
 
+    public override void reset()
+    {
+        viewRotation = 0;
+    }
+
     public override void Move()
     {
         if(Input.GetAxis("Mouse X") != 0)

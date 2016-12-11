@@ -200,6 +200,7 @@ public class Player : NetworkBehaviour
             cycleWarning = false;
             state++;
             state = state % 3;
+            actions[state].reset();
             CmdState(state);
             CycleCams();
             if (state == 1)
