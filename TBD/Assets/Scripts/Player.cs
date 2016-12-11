@@ -335,7 +335,6 @@ public class Player : NetworkBehaviour
         pos *= 200;
         pos.y = 0;
         GameObject missile = (GameObject)Instantiate(missilePrefab, ship.transform.position + pos, ship.transform.rotation);
-        missile.GetComponent<MissileAI>().target = ship.gameObject;
         NetworkServer.SpawnWithClientAuthority(missile, gameObject);
     }
 

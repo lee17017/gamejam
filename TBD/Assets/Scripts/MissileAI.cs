@@ -13,8 +13,9 @@ public class MissileAI : MonoBehaviour {
     public ParticleSystem Explosion2;
     // Use this for initialization
     void Start () {
-		
-	}
+
+        target = GameObject.FindGameObjectWithTag("SpaceShip");
+    }
 	
 	// Update is called once per frame
 	void Update () {
