@@ -8,11 +8,12 @@ public class Player : NetworkBehaviour {
     public SpaceShip ship;
     public Action[] actions;
     public AudioSource alarm;
-
+    public GameObject cursor;
     [SyncVar]
     public int state;
     public GameObject bulletPref;
     public GameObject asteroidPrefab;
+    public GameObject asteroidPrefab2;
     private float timeTillNewAsteroid;
     [SerializeField]
     private float timeTillNextCycle;
@@ -55,7 +56,7 @@ public class Player : NetworkBehaviour {
         {
 
             ship.player = this;
-            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1)%3;
+            state = (GameObject.FindGameObjectsWithTag("Player").Length - 1)%3;                
             CmdState(state);
             GameObject.Find("Button").GetComponent<Transform>().transform.position = GameObject.Find("Button").GetComponent<Transform>().transform.position + new Vector3(0, -30 * state, 0);
             Debug.Log(state);
@@ -68,7 +69,9 @@ public class Player : NetworkBehaviour {
         ship.cams[3].enabled = false;
         if (isLocalPlayer)
         {
-            Cursor.visible = false;
+            if (state == 1)
+                Instantiate(cursor, Vector3.zero, Quaternion.identity);
+                Cursor.visible = false;
             //Cursor.lockState = CursorLockMode.Locked;//Achtung
             ship.cams[state].enabled = true;
             Destroy(GameObject.Find("CanvasMen"));
@@ -280,7 +283,17 @@ public class Player : NetworkBehaviour {
         pos *= 100;
         pos.y /= 35;
         pos.y = 0;
-        var asteroid = (GameObject)Instantiate(asteroidPrefab, ship.transform.position + pos, ship.transform.rotation);
+        //Randomwert
+        float tmp =Random.Range(1, 6);
+        GameObject asteroid;
+        if (tmp < 4)
+        {
+            asteroid = (GameObject)Instantiate(asteroidPrefab, ship.transform.position + pos, ship.transform.rotation);
+        }
+        else
+        {
+            asteroid = (GameObject)Instantiate(asteroidPrefab2, ship.transform.position + pos, ship.transform.rotation);
+        }
         NetworkServer.SpawnWithClientAuthority(asteroid, gameObject);
         Destroy(asteroid, 30f);
     }

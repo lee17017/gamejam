@@ -6,8 +6,8 @@ using UnityEngine.Networking;
 //Asteroidensteuerung
 public class Asteroids : NetworkBehaviour
 {
-    //Asteroiden
     float speed = 10;
+    public ParticleSystem Explosion;
 
 	void Start ()
     {
@@ -38,11 +38,13 @@ public class Asteroids : NetworkBehaviour
         else if(other.tag == "shield")
         {
             Destroy(gameObject);
+            Instantiate(Explosion, gameObject.transform);
         }
         else if(other.tag == "SpaceShip")
         {
             other.GetComponentInParent<SpaceShip>().player.takeDamage(5);
             Destroy(gameObject);
+            Instantiate(Explosion, gameObject.transform);
         }
         
     }
