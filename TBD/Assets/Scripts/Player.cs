@@ -389,13 +389,13 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdCamUpdate(Quaternion rot)
     {
-        ship.cam.localRotation = rot;
+        ship.cam.rotation = rot;
         RpcCamUpdate(rot);
     }
 
     [ClientRpc]
     public void RpcCamUpdate(Quaternion rot)
     {
-        ship.cam.localRotation = rot;
+        ship.cam.rotation = rot;
     }
 }
