@@ -109,7 +109,7 @@ public class Player : NetworkBehaviour {
     public IEnumerator cycle()
     {
         cycleWarning = true;
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
         cycleWarning = false;
         CmdCycle();
     }

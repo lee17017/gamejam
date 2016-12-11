@@ -21,6 +21,8 @@ public class Movement : Action
 
     public override void Move()
     {
+        if (player.energyDown)
+            return;
         float move = 0;
         float rot = 0;
 		if (!altMoveBehaviour) {
