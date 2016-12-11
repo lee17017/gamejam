@@ -8,6 +8,7 @@ public class Asteroids : NetworkBehaviour
 {
     float speed = 10;
     public ParticleSystem Explosion;
+    public ParticleSystem Explosion2;
 
 	void Start ()
     {
@@ -37,14 +38,15 @@ public class Asteroids : NetworkBehaviour
         }
         else if(other.tag == "shield")
         {
+            Instantiate(Explosion2, gameObject.transform);
             Destroy(gameObject);
-            Instantiate(Explosion, gameObject.transform);
         }
         else if(other.tag == "SpaceShip")
         {
             other.GetComponentInParent<SpaceShip>().player.takeDamage(5);
-            Destroy(gameObject);
             Instantiate(Explosion, gameObject.transform);
+            Destroy(gameObject);
+
         }
         
     }
